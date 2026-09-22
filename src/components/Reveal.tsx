@@ -1,0 +1,25 @@
+import type { CSSProperties, ReactNode } from 'react'
+import { useReveal } from '@/hooks/useReveal'
+import { EASE } from '@/lib/theme'
+
+export function Reveal({
+  children,
+  delay = 0,
+  className,
+}: {
+  children: ReactNode
+  delay?: number
+  className?: string
+}) {
+  const { ref, visible } = useReveal<HTMLDivElement>()
+  const style: CSSProperties = {
+    opacity: visible ? 1 : 0,
+    transform: visible ? 'translateY(0)' : 'translateY(32px)',
+    transition: `opacity 0.9s ${EASE} ${delay}ms, transform 0.9s ${EASE} ${delay}ms`,
+  }
+  return (
+    <div ref={ref} className={className} style={style}>
+      {children}
+    </div>
+  )
+}

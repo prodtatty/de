@@ -335,6 +335,11 @@ export function useVideoScrub(videoSrc: string) {
       const p = getProgress()
       setScrollProgress(p)
 
+      if (!videoSrc) {
+        rafRef.current = requestAnimationFrame(loop)
+        return
+      }
+
       const dur = durRef.current
       if (dur > 0) {
         targetRef.current = p * dur
@@ -360,6 +365,13 @@ export function useVideoScrub(videoSrc: string) {
       rafRef.current = requestAnimationFrame(loop)
     }
     rafRef.current = requestAnimationFrame(loop)
+
+    if (!videoSrc) {
+      return () => {
+        cancelAnimationFrame(rafRef.current)
+        video.removeEventListener('loadedmetadata', onLoadedMetadata)
+      }
+    }
 
     const buildFrameBank = async () => {
       if (buildingRef.current) return

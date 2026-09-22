@@ -10,3 +10,27 @@ body {
   overflow-x: hidden;
   font-family: 'Helvetica Neue ME', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
+.hero-water-bg {
+  background: linear-gradient(135deg, #0d1b26 0%, #1d3045 45%, #2b4d69 75%, #1d3045 100%);
+  background-size: 200% 200%;
+  animation: heroWaterShift 18s ease-in-out infinite;
+}
+
+@keyframes heroWaterShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-water-bg {
+    animation: none;
+  }
+}

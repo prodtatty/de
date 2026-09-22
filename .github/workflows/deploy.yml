@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [claude/cinematic-scroll-video-site-g0hxfr]
+    branches: [claude/cinematic-scroll-video-site-g0hxfr, claude/compassionate-euler-zxmal9]
   workflow_dispatch:
 
 permissions:
