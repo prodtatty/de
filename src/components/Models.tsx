@@ -12,19 +12,38 @@ interface Model {
   images?: { src: string; alt: string }[]
 }
 
-// K460 Classic and K520 Classic figures are confirmed directly against the
-// manufacturer's own product cards. K380 is still sourced from secondhand
-// listings — verify before publishing, and drop in real photography once available.
+// All figures below are confirmed directly against the manufacturer's own
+// product cards. K380 and K410 are still missing real product photography
+// (images arrived in chat but didn't persist to disk — re-send as file
+// attachments to fill these in) and use the placeholder tile instead.
 const MODELS: Model[] = [
   {
     name: 'K380',
     tagline: 'Компактный минимал для двоих',
+    description: 'Не требует регистрации и наличия водительского удостоверения. Большой кокпит и хорошая остойчивость.',
     specs: [
-      ['Длина', '3,8 м'],
-      ['Экипаж', '2 человека'],
-      ['Регистрация', 'не требуется'],
+      ['Длина', '380 см'],
+      ['Ширина', '166 см'],
+      ['Транец', '38 см'],
+      ['Масса', '140 кг'],
+      ['Мотор до', '10 л.с.'],
+      ['Экипаж', '2 чел'],
     ],
-    price: null,
+    price: '189 000 ₽',
+  },
+  {
+    name: 'K410',
+    tagline: 'Килевая лодка для уверенного хода',
+    description: 'Килевая лодка выполнена из 7 мм первичного ПНД (полиэтилен низкого давления) PE-100 с УФ-стабилизатором.',
+    specs: [
+      ['Длина', '410 см'],
+      ['Ширина', '166 см'],
+      ['Транец', '40 см'],
+      ['Масса', '185 кг'],
+      ['Мотор до', '30 л.с.'],
+      ['Экипаж', '4 чел'],
+    ],
+    price: '239 000 ₽',
   },
   {
     name: 'K460 Classic',
@@ -135,7 +154,7 @@ export function Models() {
             className="font-light uppercase leading-[1.2] text-white"
             style={{ fontSize: 'clamp(1.75rem, 3.6vw, 3rem)' }}
           >
-            Три размера — один принцип
+            Один принцип, разные размеры
           </h2>
         </Reveal>
         <Reveal delay={160} className="mt-6 max-w-2xl">
@@ -145,7 +164,7 @@ export function Models() {
           </p>
         </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
           {MODELS.map((model, i) => (
             <ModelCard key={model.name} model={model} delay={i * 120} />
           ))}
