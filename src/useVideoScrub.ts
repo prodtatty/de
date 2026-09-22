@@ -369,8 +369,9 @@ export function useVideoScrub(videoSrc: string) {
       const watchdog = new Promise<never>((_, reject) => {
         watchdogId = window.setTimeout(() => reject(new Error('decode watchdog timeout')), WATCHDOG)
       })
+      watchdog.catch(() => {})
 
-      try {
+      const work = (async () => {
         if (prefersReducedMotion() || typeof VideoDecoder === 'undefined') {
           throw new Error('frame-bank decoding unavailable')
         }
@@ -387,24 +388,25 @@ export function useVideoScrub(videoSrc: string) {
           }
         }
 
-        const attempt = (async () => {
-          try {
-            await decodeWithMP4Box(buffer, 'prefer-hardware', bankRef.current, { onFirstFrame }, (d) => {
-              decoderRef.current = d
-            })
-          } catch (err) {
-            console.warn('[useVideoScrub] hardware decode failed, retrying with software decode', err)
-            bankRef.current.length = 0
-            readyRef.current = false
-            canvasLiveRef.current = false
-            setCanvasLive(false)
-            await decodeWithMP4Box(buffer, 'prefer-software', bankRef.current, { onFirstFrame }, (d) => {
-              decoderRef.current = d
-            })
-          }
-        })()
+        try {
+          await decodeWithMP4Box(buffer, 'prefer-hardware', bankRef.current, { onFirstFrame }, (d) => {
+            decoderRef.current = d
+          })
+        } catch (err) {
+          console.warn('[useVideoScrub] hardware decode failed, retrying with software decode', err)
+          bankRef.current.length = 0
+          readyRef.current = false
+          canvasLiveRef.current = false
+          setCanvasLive(false)
+          await decodeWithMP4Box(buffer, 'prefer-software', bankRef.current, { onFirstFrame }, (d) => {
+            decoderRef.current = d
+          })
+        }
+      })()
+      work.catch(() => {})
 
-        await Promise.race([attempt, watchdog])
+      try {
+        await Promise.race([work, watchdog])
       } catch (err) {
         console.warn('[useVideoScrub] frame bank build failed, falling back to video element seeking', err)
         revertedRef.current = true
