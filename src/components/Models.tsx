@@ -1,7 +1,6 @@
 import { Ship, ArrowRight } from 'lucide-react'
 import { Reveal } from '@/components/Reveal'
 import { ImageCarousel } from '@/components/ImageCarousel'
-import { TechnicalDrawing } from '@/components/TechnicalDrawing'
 import { NAVY_DEEP, ACCENT, accentAlpha } from '@/lib/theme'
 
 interface Model {
@@ -56,6 +55,7 @@ const MODELS: Model[] = [
       { src: 'images/k520/action.webp', alt: 'Vrungel.Pro K520 на скорости' },
       { src: 'images/k520/fishing.webp', alt: 'Рыбалка на Vrungel.Pro K520' },
       { src: 'images/k520/docked.webp', alt: 'Vrungel.Pro K520 у берега' },
+      { src: 'images/k520/blueprint.webp', alt: 'Чертёж Vrungel.Pro K520' },
     ],
   },
 ]
@@ -141,8 +141,6 @@ export function Models() {
             <ModelCard key={model.name} model={model} delay={i * 120} />
           ))}
         </div>
-
-        <TechnicalDrawing />
       </div>
     </section>
   )

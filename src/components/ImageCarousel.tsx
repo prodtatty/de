@@ -51,6 +51,10 @@ export function ImageCarousel({ images, className }: { images: CarouselImage[]; 
 
         {images.length > 1 && (
           <>
+            <div
+              className="absolute bottom-0 left-0 w-full h-14 pointer-events-none"
+              style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.45), transparent)' }}
+            />
             <button
               aria-label="Предыдущее фото"
               onClick={() => go(index - 1)}
