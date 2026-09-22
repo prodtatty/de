@@ -89,7 +89,7 @@ export function About() {
             />
             <div>
               <div className="text-sm font-medium text-white">Сертификат соответствия ЕАЭС</div>
-              <div className="mt-1 text-xs text-white/45">№ RU C-RU.HA54.B.00354/25 · открыть PDF →</div>
+              <div className="mt-1 text-xs text-white/45">№ RU C-RU.HA54.B.00354/25 · открыть PDF, 3 стр. →</div>
             </div>
           </a>
         </Reveal>
