@@ -9,6 +9,7 @@ const VIDEO_SRC = ''
 
 const NAV_LINKS: { label: string; href: string }[] = [
   { label: 'ГЛАВНАЯ', href: '#hero' },
+  { label: 'О НАС', href: '#about' },
   { label: 'ПРЕИМУЩЕСТВА', href: '#advantages' },
   { label: 'МОДЕЛИ', href: '#models' },
   { label: 'ГАЛЕРЕЯ', href: '#gallery' },

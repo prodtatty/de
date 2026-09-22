@@ -1,11 +1,11 @@
-import { ShieldCheck, Sun, Sparkles, Anchor, Youtube, PlayCircle } from 'lucide-react'
+import { Youtube, PlayCircle } from 'lucide-react'
 import { Reveal } from '@/components/Reveal'
 import { NAVY, navyAlpha, ACCENT, CREAM } from '@/lib/theme'
 
 interface Advantage {
   title: string
   text: string
-  icon?: typeof ShieldCheck
+  image?: { src: string; alt: string }
   video?: {
     embedSrc: string
     watchHref: string
@@ -33,29 +33,29 @@ const ADVANTAGES: Advantage[] = [
     },
   },
   {
-    icon: Anchor,
     title: 'Ремонтопригодность',
     text: 'Полиэтилен низкого давления поддаётся ремонту. Даже в случае повреждения лодки можно восстановить её целостность.',
+    image: { src: 'images/advantages/repair.webp', alt: 'Сборка корпуса из ПНД на производстве Vrungel.Pro' },
   },
   {
-    icon: Sun,
     title: 'Устойчивость к ультрафиолету',
     text: 'Лодки ПНД обладают высокой устойчивостью к ультрафиолетовому излучению. Это обеспечивает долговечность и надёжность лодок даже при длительном пребывании на солнце.',
+    image: { src: 'images/advantages/uv.webp', alt: 'Катер Vrungel.Pro на воде в солнечный день' },
   },
   {
-    icon: Sparkles,
     title: 'Простота в уходе',
     text: 'Лодки ПНД легко чистятся и не требуют сложного ухода. Для сохранения внешнего вида достаточно промыть их водой и вытереть сухой тряпкой.',
+    image: { src: 'images/advantages/care.webp', alt: 'Катер Vrungel.Pro под транспортировочным тентом' },
   },
   {
-    icon: ShieldCheck,
     title: 'Устойчивость к коррозии',
     text: 'Материал ПНД не подвержен коррозии. Он подходит для использования даже для морской среды, где коррозия является особым проблемным аспектом. Лодки ПНД невосприимчивы к вредителям и гниению.',
+    image: { src: 'images/advantages/corrosion.webp', alt: 'Катер Vrungel.Pro на прицепе' },
   },
 ]
 
 function AdvantageCard({ advantage, delay }: { advantage: Advantage; delay: number }) {
-  const { icon: Icon, title, text, video } = advantage
+  const { title, text, video, image } = advantage
   return (
     <Reveal delay={delay} className="rounded-2xl overflow-hidden bg-white h-full flex flex-col" style={{ boxShadow: '0 1px 3px rgba(29,48,69,0.08), 0 12px 32px -16px rgba(29,48,69,0.15)' }}>
       {video ? (
@@ -69,19 +69,11 @@ function AdvantageCard({ advantage, delay }: { advantage: Advantage; delay: numb
             loading="lazy"
           />
         </div>
-      ) : (
-        <div
-          className="relative aspect-video flex items-center justify-center"
-          style={{ background: `linear-gradient(150deg, ${navyAlpha(0.08)}, ${navyAlpha(0.03)})` }}
-        >
-          <div
-            className="flex items-center justify-center rounded-full"
-            style={{ width: 64, height: 64, backgroundColor: '#ffffff' }}
-          >
-            {Icon && <Icon size={26} color={NAVY} strokeWidth={1.5} />}
-          </div>
+      ) : image ? (
+        <div className="relative aspect-video">
+          <img src={image.src} alt={image.alt} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
         </div>
-      )}
+      ) : null}
 
       <div className="p-6 flex flex-col flex-1">
         <h3 className="text-lg font-medium mb-2" style={{ color: NAVY }}>

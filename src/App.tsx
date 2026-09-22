@@ -1,5 +1,6 @@
 import { Hero } from '@/components/Hero'
 import { StickyNav } from '@/components/StickyNav'
+import { About } from '@/components/About'
 import { Advantages } from '@/components/Advantages'
 import { Models } from '@/components/Models'
 import { Gallery } from '@/components/Gallery'
@@ -10,6 +11,7 @@ export default function App() {
     <>
       <StickyNav />
       <Hero />
+      <About />
       <Advantages />
       <Models />
       <Gallery />

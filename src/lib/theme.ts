@@ -4,7 +4,7 @@ export const NAVY_DEEP = '#101B27'
 export const NAVY_DEEP_RGB = '16, 27, 39'
 export const ACCENT = '#D9A24B'
 export const ACCENT_RGB = '217, 162, 75'
-export const CREAM = '#F6F3EC'
+export const CREAM = '#ECE5D6'
 
 export const navyAlpha = (a: number) => `rgba(${NAVY_RGB}, ${a})`
 export const navyDeepAlpha = (a: number) => `rgba(${NAVY_DEEP_RGB}, ${a})`
