@@ -48,7 +48,7 @@ export function ModelModal({ model, onClose }: { model: Model; onClose: () => vo
         style={{ opacity: visible ? 1 : 0, transition: `opacity ${TRANSITION_MS}ms ${EASE}` }}
       />
       <div
-        className="relative w-full sm:max-w-5xl h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto sm:rounded-3xl"
+        className="modal-scroll relative w-full sm:max-w-5xl h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto sm:rounded-3xl"
         style={{
           backgroundColor: NAVY_DEEP,
           opacity: visible ? 1 : 0,
