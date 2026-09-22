@@ -73,6 +73,27 @@ export function About() {
           ))}
         </Reveal>
 
+        <Reveal delay={300} className="mt-10">
+          <a
+            href="images/certificate.webp"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-4 rounded-2xl p-3 pr-6 hover:border-white/25 transition-colors"
+            style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+          >
+            <img
+              src="images/certificate.webp"
+              alt="Сертификат соответствия ЕАЭС на лодки Vrungel.Pro"
+              className="rounded-lg flex-shrink-0"
+              style={{ width: 64, height: 64, objectFit: 'cover', objectPosition: 'top' }}
+            />
+            <div>
+              <div className="text-sm font-medium text-white">Сертификат соответствия ЕАЭС</div>
+              <div className="mt-1 text-xs text-white/45">№ RU C-RU.HA · открыть в полном размере →</div>
+            </div>
+          </a>
+        </Reveal>
+
         <Reveal delay={100} className="mt-20 sm:mt-24">
           <h3 className="text-xl sm:text-2xl font-light uppercase tracking-wide text-white">
             Почему выбирают Vrungel.Pro
