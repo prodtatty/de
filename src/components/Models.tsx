@@ -60,6 +60,7 @@ const MODELS: Model[] = [
     ],
     price: '489 000 ₽',
     images: [
+      { src: 'images/k460/cover.webp', alt: 'Vrungel.Pro K460 на производстве' },
       { src: 'images/k460/trailer.webp', alt: 'Vrungel.Pro K460 на прицепе' },
       { src: 'images/k460/action.webp', alt: 'Vrungel.Pro K460 на воде в Санкт-Петербурге' },
       { src: 'images/k460/cockpit.webp', alt: 'Кокпит Vrungel.Pro K460' },
