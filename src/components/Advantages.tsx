@@ -50,7 +50,7 @@ const ADVANTAGES: Advantage[] = [
   {
     title: 'Устойчивость к коррозии',
     text: 'Материал ПНД не подвержен коррозии. Он подходит для использования даже для морской среды, где коррозия является особым проблемным аспектом. Лодки ПНД невосприимчивы к вредителям и гниению.',
-    image: { src: 'images/advantages/corrosion.webp', alt: 'Катер Vrungel.Pro на прицепе' },
+    image: { src: 'images/advantages/corrosion.webp', alt: 'Днище катера Vrungel.Pro без следов коррозии' },
   },
 ]
 
