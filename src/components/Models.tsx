@@ -12,10 +12,9 @@ interface Model {
   images?: { src: string; alt: string }[]
 }
 
-// Specs and prices sourced from public listings of the Vrungel.Pro lineup.
-// K520 Classic figures confirmed directly against the manufacturer's own product
-// card. K380 / K460 Classic are still secondhand — verify before publishing,
-// and drop in real photography for them too once available.
+// K460 Classic and K520 Classic figures are confirmed directly against the
+// manufacturer's own product cards. K380 is still sourced from secondhand
+// listings — verify before publishing, and drop in real photography once available.
 const MODELS: Model[] = [
   {
     name: 'K380',
@@ -30,12 +29,22 @@ const MODELS: Model[] = [
   {
     name: 'K460 Classic',
     tagline: 'Для семьи и активной рыбалки',
+    description:
+      'Подходит для прогулок в компании или комфортного уединения. Даже с экономичным мотором демонстрирует отличные скоростные показатели.',
     specs: [
-      ['Длина', '4,6 м (5 м с кринолинами)'],
-      ['Ширина', '1,85 м'],
-      ['Грузоподъёмность', '440 кг'],
+      ['Длина', '460 см'],
+      ['Ширина', '185 см'],
+      ['Транец', '51 см'],
+      ['Масса', '276 кг'],
+      ['Мотор до', '60 л.с.'],
+      ['Экипаж', '4 чел'],
     ],
-    price: 'от 489 000 ₽',
+    price: '489 000 ₽',
+    images: [
+      { src: 'images/k460/trailer.webp', alt: 'Vrungel.Pro K460 на прицепе' },
+      { src: 'images/k460/action.webp', alt: 'Vrungel.Pro K460 на воде в Санкт-Петербурге' },
+      { src: 'images/k460/cockpit.webp', alt: 'Кокпит Vrungel.Pro K460' },
+    ],
   },
   {
     name: 'K520 Classic',
