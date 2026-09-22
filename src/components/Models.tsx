@@ -281,7 +281,7 @@ function ModelCard({ model, delay, onOpen }: { model: Model; delay: number; onOp
 
         <div className="mt-auto pt-8 flex items-center justify-between">
           <span className="text-lg font-medium" style={{ color: ACCENT }}>
-            {model.price ?? 'Цена по запросу'}
+            {model.price ? `от ${model.price}` : 'Цена по запросу'}
           </span>
           <a
             href="#contact"
@@ -319,8 +319,8 @@ export function Models() {
         </Reveal>
         <Reveal delay={160} className="mt-6 max-w-2xl">
           <p className="text-base sm:text-lg leading-relaxed text-white/60">
-            От лёгкой двухместной лодки до катера для большой компании — один и тот же непотопляемый
-            корпус из ПНД, разный размер под ваши задачи.
+            От лёгкой двухместной лодки до вместительной лодки для большой компании — один и тот же
+            непотопляемый корпус из ПНД, разный размер под ваши задачи.
           </p>
         </Reveal>
 

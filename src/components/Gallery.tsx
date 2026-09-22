@@ -19,7 +19,7 @@ export function Gallery() {
             className="font-light uppercase leading-[1.2]"
             style={{ fontSize: 'clamp(1.75rem, 3.6vw, 3rem)', color: NAVY }}
           >
-            Катера в деле
+            Лодки в деле
           </h2>
         </Reveal>
 

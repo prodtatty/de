@@ -16,7 +16,7 @@ export function Contact() {
             className="font-light uppercase leading-[1.2] text-white mx-auto max-w-3xl"
             style={{ fontSize: 'clamp(1.75rem, 4vw, 3.25rem)' }}
           >
-            Готовы обсудить свой катер?
+            Готовы обсудить свою лодку?
           </h2>
         </Reveal>
         <Reveal delay={160} className="mt-6">
@@ -47,7 +47,7 @@ export function Contact() {
       <div className="border-t border-white/10">
         <div className="max-w-6xl mx-auto px-6 sm:px-8 md:px-12 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span className="text-xs tracking-[0.15em] uppercase text-white/40">
-            Vrungel<span style={{ color: ACCENT }}>.</span>Pro — катера из ПНД
+            Vrungel<span style={{ color: ACCENT }}>.</span>Pro — лодки из ПНД
           </span>
           <div className="flex items-center gap-6">
             <a href="#about" className="text-xs tracking-[0.15em] uppercase text-white/40 hover:text-white/70 transition-colors">

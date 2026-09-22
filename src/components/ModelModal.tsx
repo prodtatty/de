@@ -85,7 +85,7 @@ export function ModelModal({ model, onClose }: { model: Model; onClose: () => vo
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <span className="text-2xl font-medium" style={{ color: ACCENT }}>
-              {model.price ?? 'Цена по запросу'}
+              {model.price ? `от ${model.price}` : 'Цена по запросу'}
             </span>
             <a
               href={PHONE_HREF}

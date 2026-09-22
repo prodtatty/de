@@ -214,7 +214,7 @@ function Section1({ opacity }: { opacity: number }) {
             className="font-light uppercase leading-[1.15] text-white"
             style={{ fontSize: 'clamp(2rem, 5.2vw, 5rem)' }}
           >
-            Катера, которым
+            Лодки, которым
             <br />
             не страшна вода
           </h1>
@@ -309,7 +309,7 @@ function Section3({ opacity }: { opacity: number }) {
             className="font-light text-white leading-[1.2] uppercase tracking-wide mb-8"
             style={{ fontSize: 'clamp(2rem, 4vw, 4rem)' }}
           >
-            Выберите катер
+            Выберите лодку
             <br />
             под свои задачи
           </h2>

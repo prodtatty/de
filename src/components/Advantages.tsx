@@ -40,17 +40,17 @@ const ADVANTAGES: Advantage[] = [
   {
     title: 'Устойчивость к ультрафиолету',
     text: 'Лодки ПНД обладают высокой устойчивостью к ультрафиолетовому излучению. Это обеспечивает долговечность и надёжность лодок даже при длительном пребывании на солнце.',
-    image: { src: 'images/advantages/uv.webp', alt: 'Катер Vrungel.Pro на воде в солнечный день' },
+    image: { src: 'images/advantages/uv.webp', alt: 'Лодка Vrungel.Pro на воде в солнечный день' },
   },
   {
     title: 'Простота в уходе',
     text: 'Лодки ПНД легко чистятся и не требуют сложного ухода. Для сохранения внешнего вида достаточно промыть их водой и вытереть сухой тряпкой.',
-    image: { src: 'images/advantages/care.webp', alt: 'Катер Vrungel.Pro под транспортировочным тентом' },
+    image: { src: 'images/advantages/care.webp', alt: 'Лодка Vrungel.Pro под транспортировочным тентом' },
   },
   {
     title: 'Устойчивость к коррозии',
     text: 'Материал ПНД не подвержен коррозии. Он подходит для использования даже для морской среды, где коррозия является особым проблемным аспектом. Лодки ПНД невосприимчивы к вредителям и гниению.',
-    image: { src: 'images/advantages/corrosion.webp', alt: 'Днище катера Vrungel.Pro без следов коррозии' },
+    image: { src: 'images/advantages/corrosion.webp', alt: 'Днище лодки Vrungel.Pro без следов коррозии' },
   },
 ]
 
@@ -120,7 +120,7 @@ export function Advantages() {
         <Reveal delay={160} className="mt-6 max-w-2xl">
           <p className="text-base sm:text-lg leading-relaxed" style={{ color: navyAlpha(0.8) }}>
             Каждый корпус формуется на собственном производстве в Сосновом Бору — от раскроя листа
-            ПНД на фрезерном станке с ЧПУ до сборки готового катера.
+            ПНД на фрезерном станке с ЧПУ до сборки готовой лодки.
           </p>
         </Reveal>
 
