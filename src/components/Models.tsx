@@ -1,15 +1,24 @@
+import { useState } from 'react'
 import { Ship, ArrowRight } from 'lucide-react'
 import { Reveal } from '@/components/Reveal'
 import { ImageCarousel } from '@/components/ImageCarousel'
+import { ModelModal } from '@/components/ModelModal'
 import { NAVY_DEEP, ACCENT, accentAlpha } from '@/lib/theme'
 
-interface Model {
+export interface ModelDetails {
+  characteristics: [string, string][]
+  layout: string[]
+  options: string[]
+}
+
+export interface Model {
   name: string
   tagline: string
   description?: string
   specs: [string, string][]
   price: string | null
   images?: { src: string; alt: string }[]
+  details?: ModelDetails
 }
 
 // All figures below are confirmed directly against the manufacturer's own
@@ -94,12 +103,60 @@ const MODELS: Model[] = [
       { src: 'images/k520/docked.webp', alt: 'Vrungel.Pro K520 у берега' },
       { src: 'images/k520/blueprint.webp', alt: 'Чертёж Vrungel.Pro K520' },
     ],
+    details: {
+      characteristics: [
+        ['Материал корпуса', 'ПНД 8 мм PE-100 с УФ-стабилизатором'],
+        ['Длина', '5,2 м (с кринолинами 5,7 м)'],
+        ['Ширина', '2,2 м'],
+        ['Высота борта на миделе', '0,88 м'],
+        ['Высота транца', '0,51 м'],
+        ['Масса', '410 кг'],
+        ['Численность экипажа', '5 человек'],
+        ['Мах грузоподъёмность', '645 кг'],
+        ['Мах мощность двигателя', '110,3 кВт / 150 л.с.'],
+        ['Килеватость на транце', '16°'],
+        ['Килеватость на миделе', '22°'],
+      ],
+      layout: [
+        'Государственный сертификат соответствия и полный комплект документов для постановки на учёт в ГИМС',
+        'Консоли со стеклом из монолитного поликарбоната',
+        'Бардачок в пассажирской консоли',
+        'Кринобули',
+        'Открытая носовая палуба с тремя рундуками',
+        'Кормовой рундук',
+        'Кормовой рундук под тент',
+        'Якорный ящик',
+        'Закладная под топливный бак',
+        'Самоотливной рецесс',
+        'Блоки плавучести, заполненные пеноплексом',
+        'Слани из 9 мм влагостойкой фанеры с окрашенными торцами',
+        'Петли транспортировочные',
+        'Носовой/кормовой рымы',
+        'Швартовые утки',
+        'Сливная пробка',
+      ],
+      options: [
+        'Площадка под аккумулятор',
+        'Фиш-палуба',
+        'Капот съёмный',
+        'Сиденье',
+        'Сухой рундук',
+        'Электропроводка и все сопутствующие комплектующие',
+        'Установка мотора',
+        'Навигационное оборудование',
+        'Тент ходовой',
+        'Тент транспортировочный',
+        'Дополнительное оборудование',
+        'Индивидуальный дизайн',
+        'Индивидуальная обшивка',
+      ],
+    },
   },
 ]
 
-function ModelCard({ model, delay }: { model: Model; delay: number }) {
+function ModelCard({ model, delay, onOpen }: { model: Model; delay: number; onOpen: () => void }) {
   return (
-    <Reveal delay={delay} className="flex flex-col h-full">
+    <Reveal delay={delay} className="flex flex-col h-full cursor-pointer group" onClick={onOpen}>
       {model.images ? (
         <ImageCarousel images={model.images} />
       ) : (
@@ -118,7 +175,15 @@ function ModelCard({ model, delay }: { model: Model; delay: number }) {
       )}
 
       <div className="flex flex-col flex-1 pt-6">
-        <h3 className="text-2xl font-light text-white uppercase tracking-wide">{model.name}</h3>
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-2xl font-light text-white uppercase tracking-wide">{model.name}</h3>
+          <span
+            className="text-[11px] tracking-[0.15em] uppercase whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{ color: ACCENT }}
+          >
+            Подробнее →
+          </span>
+        </div>
         <p className="mt-1 text-sm text-white/60">{model.tagline}</p>
         {model.description && <p className="mt-3 text-sm leading-relaxed text-white/50">{model.description}</p>}
 
@@ -138,6 +203,7 @@ function ModelCard({ model, delay }: { model: Model; delay: number }) {
           <a
             href="#contact"
             aria-label={`Оставить заявку на ${model.name}`}
+            onClick={(e) => e.stopPropagation()}
             className="flex items-center justify-center rounded-full border border-white/25 hover:border-white transition-colors"
             style={{ width: 40, height: 40 }}
           >
@@ -150,6 +216,8 @@ function ModelCard({ model, delay }: { model: Model; delay: number }) {
 }
 
 export function Models() {
+  const [openModel, setOpenModel] = useState<Model | null>(null)
+
   return (
     <section id="models" className="py-24 sm:py-32 px-6 sm:px-8 md:px-12" style={{ backgroundColor: NAVY_DEEP }}>
       <div className="max-w-6xl mx-auto">
@@ -175,10 +243,12 @@ export function Models() {
 
         <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
           {MODELS.map((model, i) => (
-            <ModelCard key={model.name} model={model} delay={i * 120} />
+            <ModelCard key={model.name} model={model} delay={i * 120} onOpen={() => setOpenModel(model)} />
           ))}
         </div>
       </div>
+
+      {openModel && <ModelModal model={openModel} onClose={() => setOpenModel(null)} />}
     </section>
   )
 }

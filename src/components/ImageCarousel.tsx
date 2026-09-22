@@ -57,7 +57,10 @@ export function ImageCarousel({ images, className }: { images: CarouselImage[]; 
             />
             <button
               aria-label="Предыдущее фото"
-              onClick={() => go(index - 1)}
+              onClick={(e) => {
+                e.stopPropagation()
+                go(index - 1)
+              }}
               className="absolute left-2 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-sm transition-colors"
               style={{ width: 32, height: 32 }}
             >
@@ -65,7 +68,10 @@ export function ImageCarousel({ images, className }: { images: CarouselImage[]; 
             </button>
             <button
               aria-label="Следующее фото"
-              onClick={() => go(index + 1)}
+              onClick={(e) => {
+                e.stopPropagation()
+                go(index + 1)
+              }}
               className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-sm transition-colors"
               style={{ width: 32, height: 32 }}
             >
@@ -77,7 +83,10 @@ export function ImageCarousel({ images, className }: { images: CarouselImage[]; 
                 <button
                   key={img.src}
                   aria-label={`Фото ${i + 1}`}
-                  onClick={() => go(i)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    go(i)
+                  }}
                   className="rounded-full transition-all"
                   style={{
                     width: i === index ? 16 : 6,
