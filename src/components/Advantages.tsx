@@ -1,47 +1,120 @@
-import { LifeBuoy, ShieldCheck, Sun, Thermometer, Wrench, FileCheck2 } from 'lucide-react'
+import { ShieldCheck, Sun, Sparkles, Anchor, Youtube, PlayCircle } from 'lucide-react'
 import { Reveal } from '@/components/Reveal'
 import { NAVY, navyAlpha, ACCENT, CREAM } from '@/lib/theme'
 
-const ADVANTAGES = [
+interface Advantage {
+  title: string
+  text: string
+  icon?: typeof ShieldCheck
+  video?: {
+    embedSrc: string
+    watchHref: string
+    platform: 'youtube' | 'rutube'
+  }
+}
+
+const ADVANTAGES: Advantage[] = [
   {
-    icon: LifeBuoy,
-    title: 'Не тонет',
-    text: 'Блоки плавучести держат катер на воде даже при пробое борта.',
+    title: 'Безопасность на воде',
+    text: 'Лодки ПНД обладают превосходной плавучестью и устойчивостью, обеспечивая безопасность ваших приключений на воде.',
+    video: {
+      embedSrc: 'https://www.youtube.com/embed/j3nm80AjkS0',
+      watchHref: 'https://www.youtube.com/watch?v=j3nm80AjkS0',
+      platform: 'youtube',
+    },
   },
   {
-    icon: ShieldCheck,
-    title: 'Не боится ударов',
-    text: 'Лист ПНД PE-100 толщиной от 8 мм выдерживает удары о камни, лёд и мель.',
+    title: 'Прочный материал',
+    text: 'ПНД — это высококачественный полиэтилен низкого давления. Материал обеспечивает высокую прочность и устойчивость к механическим повреждениям.',
+    video: {
+      embedSrc: 'https://rutube.ru/play/embed/186329bffa38bb70ffded98469fc6135/',
+      watchHref: 'https://rutube.ru/play/embed/186329bffa38bb70ffded98469fc6135/',
+      platform: 'rutube',
+    },
+  },
+  {
+    icon: Anchor,
+    title: 'Ремонтопригодность',
+    text: 'Полиэтилен низкого давления поддаётся ремонту. Даже в случае повреждения лодки можно восстановить её целостность.',
   },
   {
     icon: Sun,
-    title: 'Не выгорает',
-    text: 'УФ-стабилизатор защищает корпус от солнца — цвет и прочность не меняются годами.',
+    title: 'Устойчивость к ультрафиолету',
+    text: 'Лодки ПНД обладают высокой устойчивостью к ультрафиолетовому излучению. Это обеспечивает долговечность и надёжность лодок даже при длительном пребывании на солнце.',
   },
   {
-    icon: Thermometer,
-    title: 'Работает в любую погоду',
-    text: 'От −15 °C до +80 °C — рыбалка и в межсезонье, и в жару.',
+    icon: Sparkles,
+    title: 'Простота в уходе',
+    text: 'Лодки ПНД легко чистятся и не требуют сложного ухода. Для сохранения внешнего вида достаточно промыть их водой и вытереть сухой тряпкой.',
   },
   {
-    icon: Wrench,
-    title: 'Ремонтопригоден',
-    text: 'В отличие от треснувшего стеклопластика, ПНД можно сварить и восстановить.',
-  },
-  {
-    icon: FileCheck2,
-    title: 'Официально',
-    text: 'Сертификат Таможенного союза, постановка на учёт в ГИМС.',
+    icon: ShieldCheck,
+    title: 'Устойчивость к коррозии',
+    text: 'Материал ПНД не подвержен коррозии. Он подходит для использования даже для морской среды, где коррозия является особым проблемным аспектом. Лодки ПНД невосприимчивы к вредителям и гниению.',
   },
 ]
 
+function AdvantageCard({ advantage, delay }: { advantage: Advantage; delay: number }) {
+  const { icon: Icon, title, text, video } = advantage
+  return (
+    <Reveal delay={delay} className="rounded-2xl overflow-hidden bg-white h-full flex flex-col" style={{ boxShadow: '0 1px 3px rgba(29,48,69,0.08), 0 12px 32px -16px rgba(29,48,69,0.15)' }}>
+      {video ? (
+        <div className="relative aspect-video bg-black">
+          <iframe
+            src={video.embedSrc}
+            title={title}
+            className="absolute inset-0 w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            loading="lazy"
+          />
+        </div>
+      ) : (
+        <div
+          className="relative aspect-video flex items-center justify-center"
+          style={{ background: `linear-gradient(150deg, ${navyAlpha(0.08)}, ${navyAlpha(0.03)})` }}
+        >
+          <div
+            className="flex items-center justify-center rounded-full"
+            style={{ width: 64, height: 64, backgroundColor: '#ffffff' }}
+          >
+            {Icon && <Icon size={26} color={NAVY} strokeWidth={1.5} />}
+          </div>
+        </div>
+      )}
+
+      <div className="p-6 flex flex-col flex-1">
+        <h3 className="text-lg font-medium mb-2" style={{ color: NAVY }}>
+          {title}
+        </h3>
+        <p className="text-sm leading-relaxed" style={{ color: navyAlpha(0.6) }}>
+          {text}
+        </p>
+
+        {video && (
+          <a
+            href={video.watchHref}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-medium hover:opacity-70 transition-opacity"
+            style={{ color: ACCENT }}
+          >
+            {video.platform === 'youtube' ? <Youtube size={16} /> : <PlayCircle size={16} />}
+            Посмотреть видео
+          </a>
+        )}
+      </div>
+    </Reveal>
+  )
+}
+
 export function Advantages() {
   return (
-    <section id="material" className="py-24 sm:py-32 px-6 sm:px-8 md:px-12" style={{ backgroundColor: CREAM }}>
+    <section id="advantages" className="py-24 sm:py-32 px-6 sm:px-8 md:px-12" style={{ backgroundColor: CREAM }}>
       <div className="max-w-6xl mx-auto">
         <Reveal>
           <p className="text-xs tracking-[0.3em] uppercase font-medium" style={{ color: ACCENT }}>
-            Материал
+            Преимущества
           </p>
         </Reveal>
         <Reveal delay={80} className="mt-4 max-w-3xl">
@@ -49,7 +122,7 @@ export function Advantages() {
             className="font-light uppercase leading-[1.2]"
             style={{ fontSize: 'clamp(1.75rem, 3.6vw, 3rem)', color: NAVY }}
           >
-            Корпус, который не боится воды
+            Преимущества лодок из ПНД
           </h2>
         </Reveal>
         <Reveal delay={160} className="mt-6 max-w-2xl">
@@ -59,22 +132,9 @@ export function Advantages() {
           </p>
         </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          {ADVANTAGES.map(({ icon: Icon, title, text }, i) => (
-            <Reveal key={title} delay={(i % 3) * 100}>
-              <div
-                className="flex items-center justify-center rounded-full mb-5"
-                style={{ width: 52, height: 52, backgroundColor: navyAlpha(0.06) }}
-              >
-                <Icon size={22} color={NAVY} strokeWidth={1.75} />
-              </div>
-              <h3 className="text-lg font-medium mb-2" style={{ color: NAVY }}>
-                {title}
-              </h3>
-              <p className="text-sm leading-relaxed" style={{ color: navyAlpha(0.6) }}>
-                {text}
-              </p>
-            </Reveal>
+        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+          {ADVANTAGES.map((advantage, i) => (
+            <AdvantageCard key={advantage.title} advantage={advantage} delay={(i % 3) * 100} />
           ))}
         </div>
       </div>

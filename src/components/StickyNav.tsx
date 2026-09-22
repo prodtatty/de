@@ -37,8 +37,8 @@ export function StickyNav() {
         Vrungel<span style={{ color: ACCENT }}>.</span>Pro
       </a>
       <div className="hidden sm:flex items-center gap-8">
-        <a href="#material" className="text-xs tracking-[0.15em] uppercase text-white/70 hover:text-white transition-colors">
-          Материал
+        <a href="#advantages" className="text-xs tracking-[0.15em] uppercase text-white/70 hover:text-white transition-colors">
+          Преимущества
         </a>
         <a href="#models" className="text-xs tracking-[0.15em] uppercase text-white/70 hover:text-white transition-colors">
           Модели

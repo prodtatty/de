@@ -50,8 +50,8 @@ export function Contact() {
             Vrungel<span style={{ color: ACCENT }}>.</span>Pro — катера из ПНД
           </span>
           <div className="flex items-center gap-6">
-            <a href="#material" className="text-xs tracking-[0.15em] uppercase text-white/40 hover:text-white/70 transition-colors">
-              Материал
+            <a href="#advantages" className="text-xs tracking-[0.15em] uppercase text-white/40 hover:text-white/70 transition-colors">
+              Преимущества
             </a>
             <a href="#models" className="text-xs tracking-[0.15em] uppercase text-white/40 hover:text-white/70 transition-colors">
               Модели

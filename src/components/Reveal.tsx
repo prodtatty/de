@@ -7,14 +7,17 @@ export function Reveal({
   delay = 0,
   className,
   onClick,
+  style: extraStyle,
 }: {
   children: ReactNode
   delay?: number
   className?: string
   onClick?: () => void
+  style?: CSSProperties
 }) {
   const { ref, visible } = useReveal<HTMLDivElement>()
   const style: CSSProperties = {
+    ...extraStyle,
     opacity: visible ? 1 : 0,
     transform: visible ? 'translateY(0)' : 'translateY(32px)',
     transition: `opacity 0.9s ${EASE} ${delay}ms, transform 0.9s ${EASE} ${delay}ms`,

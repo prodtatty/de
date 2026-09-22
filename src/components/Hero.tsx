@@ -9,7 +9,7 @@ const VIDEO_SRC = ''
 
 const NAV_LINKS: { label: string; href: string }[] = [
   { label: 'ГЛАВНАЯ', href: '#hero' },
-  { label: 'МАТЕРИАЛ ПНД', href: '#material' },
+  { label: 'ПРЕИМУЩЕСТВА', href: '#advantages' },
   { label: 'МОДЕЛИ', href: '#models' },
   { label: 'ГАЛЕРЕЯ', href: '#gallery' },
   { label: 'КОНТАКТЫ', href: '#contact' },
@@ -231,8 +231,8 @@ function Section1({ opacity }: { opacity: number }) {
         className="absolute bottom-12 right-6 sm:right-8 md:right-12 pointer-events-auto"
       >
         <a
-          href="#material"
-          aria-label="Узнать о материале"
+          href="#advantages"
+          aria-label="Узнать о преимуществах"
           className="flex items-center justify-center rounded-full hover:opacity-70 transition-opacity"
           style={{ width: 48, height: 48, border: '1px solid rgba(255,255,255,0.5)' }}
         >
