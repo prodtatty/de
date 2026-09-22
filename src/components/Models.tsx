@@ -1,17 +1,22 @@
 import { Ship, ArrowRight } from 'lucide-react'
 import { Reveal } from '@/components/Reveal'
+import { ImageCarousel } from '@/components/ImageCarousel'
+import { TechnicalDrawing } from '@/components/TechnicalDrawing'
 import { NAVY_DEEP, ACCENT, accentAlpha } from '@/lib/theme'
 
 interface Model {
   name: string
   tagline: string
+  description?: string
   specs: [string, string][]
   price: string | null
+  images?: { src: string; alt: string }[]
 }
 
 // Specs and prices sourced from public listings of the Vrungel.Pro lineup.
-// TODO: confirm current prices/specs against the manufacturer before publishing,
-// and drop in real product photography per model (image slots below are placeholders).
+// K520 Classic figures confirmed directly against the manufacturer's own product
+// card. K380 / K460 Classic are still secondhand — verify before publishing,
+// and drop in real photography for them too once available.
 const MODELS: Model[] = [
   {
     name: 'K380',
@@ -36,40 +41,55 @@ const MODELS: Model[] = [
   {
     name: 'K520 Classic',
     tagline: 'Топ линейки для больших компаний',
+    description:
+      'Максимальный комфорт и безопасность на воде. Просторный кокпит для больших компаний. Подходит для длительных путешествий и активного отдыха.',
     specs: [
-      ['Длина', '5,2 м'],
-      ['Ширина', '2,2 м'],
-      ['Мотор', 'до 150 л.с.'],
+      ['Длина', '520 см'],
+      ['Ширина', '220 см'],
+      ['Транец', '51 см'],
+      ['Масса', '410 кг'],
+      ['Мотор до', '150 л.с.'],
+      ['Экипаж', '5 чел'],
     ],
-    price: 'от 688 000 ₽',
+    price: '688 000 ₽',
+    images: [
+      { src: 'images/k520/action.webp', alt: 'Vrungel.Pro K520 на скорости' },
+      { src: 'images/k520/fishing.webp', alt: 'Рыбалка на Vrungel.Pro K520' },
+      { src: 'images/k520/docked.webp', alt: 'Vrungel.Pro K520 у берега' },
+    ],
   },
 ]
 
 function ModelCard({ model, delay }: { model: Model; delay: number }) {
   return (
     <Reveal delay={delay} className="flex flex-col h-full">
-      <div
-        className="relative aspect-[4/3] rounded-2xl overflow-hidden flex items-center justify-center"
-        style={{ background: `linear-gradient(150deg, ${accentAlpha(0.12)}, rgba(255,255,255,0.04))` }}
-      >
-        <Ship size={40} strokeWidth={1.25} color={accentAlpha(0.7)} />
-        <span
-          className="absolute bottom-3 right-3 text-[10px] tracking-[0.15em] uppercase px-2 py-1 rounded-full"
-          style={{ backgroundColor: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }}
+      {model.images ? (
+        <ImageCarousel images={model.images} />
+      ) : (
+        <div
+          className="relative aspect-[4/3] rounded-2xl overflow-hidden flex items-center justify-center"
+          style={{ background: `linear-gradient(150deg, ${accentAlpha(0.12)}, rgba(255,255,255,0.04))` }}
         >
-          Фото модели
-        </span>
-      </div>
+          <Ship size={40} strokeWidth={1.25} color={accentAlpha(0.7)} />
+          <span
+            className="absolute bottom-3 right-3 text-[10px] tracking-[0.15em] uppercase px-2 py-1 rounded-full"
+            style={{ backgroundColor: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }}
+          >
+            Фото модели
+          </span>
+        </div>
+      )}
 
       <div className="flex flex-col flex-1 pt-6">
         <h3 className="text-2xl font-light text-white uppercase tracking-wide">{model.name}</h3>
         <p className="mt-1 text-sm text-white/60">{model.tagline}</p>
+        {model.description && <p className="mt-3 text-sm leading-relaxed text-white/50">{model.description}</p>}
 
-        <div className="mt-6 flex flex-col gap-2.5">
+        <div className="mt-6 grid grid-cols-2 gap-2.5">
           {model.specs.map(([label, value]) => (
-            <div key={label} className="flex items-baseline justify-between text-sm border-b border-white/10 pb-2.5">
-              <span className="text-white/50">{label}</span>
-              <span className="text-white font-medium">{value}</span>
+            <div key={label} className="rounded-lg px-3 py-2.5" style={{ backgroundColor: 'rgba(255,255,255,0.05)' }}>
+              <div className="text-[11px] uppercase tracking-wide text-white/40">{label}</div>
+              <div className="text-sm text-white font-medium mt-0.5">{value}</div>
             </div>
           ))}
         </div>
@@ -121,6 +141,8 @@ export function Models() {
             <ModelCard key={model.name} model={model} delay={i * 120} />
           ))}
         </div>
+
+        <TechnicalDrawing />
       </div>
     </section>
   )
