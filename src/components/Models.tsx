@@ -13,8 +13,7 @@ interface Model {
 }
 
 // All figures below are confirmed directly against the manufacturer's own
-// product cards. K410 is still missing real product photography and uses
-// the placeholder tile until photos are sent through as file attachments.
+// product cards, with real product photography for every model.
 const MODELS: Model[] = [
   {
     name: 'K380',
@@ -49,6 +48,10 @@ const MODELS: Model[] = [
       ['Экипаж', '4 чел'],
     ],
     price: '239 000 ₽',
+    images: [
+      { src: 'images/k410/shore.webp', alt: 'Vrungel.Pro K410 на берегу' },
+      { src: 'images/k410/ice.webp', alt: 'Vrungel.Pro K410 зимней рыбалкой' },
+    ],
   },
   {
     name: 'K460 Classic',
