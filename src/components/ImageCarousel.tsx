@@ -6,7 +6,17 @@ interface CarouselImage {
   alt: string
 }
 
-export function ImageCarousel({ images, className }: { images: CarouselImage[]; className?: string }) {
+export function ImageCarousel({
+  images,
+  className,
+  aspectClassName = 'aspect-[4/3]',
+  rounded = true,
+}: {
+  images: CarouselImage[]
+  className?: string
+  aspectClassName?: string
+  rounded?: boolean
+}) {
   const [index, setIndex] = useState(0)
   const touchStartX = useRef<number | null>(null)
 
@@ -30,7 +40,7 @@ export function ImageCarousel({ images, className }: { images: CarouselImage[]; 
   return (
     <div className={`relative select-none ${className ?? ''}`}>
       <div
-        className="relative aspect-[4/3] rounded-2xl overflow-hidden"
+        className={`relative ${aspectClassName} ${rounded ? 'rounded-2xl' : ''} overflow-hidden`}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
