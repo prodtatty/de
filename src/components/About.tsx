@@ -75,21 +75,21 @@ export function About() {
 
         <Reveal delay={300} className="mt-10">
           <a
-            href="images/certificate.webp"
+            href="documents/certificate.pdf"
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-4 rounded-2xl p-3 pr-6 hover:border-white/25 transition-colors"
             style={{ border: '1px solid rgba(255,255,255,0.1)' }}
           >
             <img
-              src="images/certificate.webp"
+              src="images/certificate-thumb.webp"
               alt="Сертификат соответствия ЕАЭС на лодки Vrungel.Pro"
-              className="rounded-lg flex-shrink-0"
-              style={{ width: 64, height: 64, objectFit: 'cover', objectPosition: 'top' }}
+              className="rounded-md flex-shrink-0"
+              style={{ width: 72, height: 100, objectFit: 'cover', boxShadow: '0 6px 16px rgba(0,0,0,0.35)' }}
             />
             <div>
               <div className="text-sm font-medium text-white">Сертификат соответствия ЕАЭС</div>
-              <div className="mt-1 text-xs text-white/45">№ RU C-RU.HA · открыть в полном размере →</div>
+              <div className="mt-1 text-xs text-white/45">№ RU C-RU.HA54.B.00354/25 · открыть PDF →</div>
             </div>
           </a>
         </Reveal>
