@@ -12,5 +12,5 @@ export const accentAlpha = (a: number) => `rgba(${ACCENT_RGB}, ${a})`
 
 export const EASE = 'cubic-bezier(0.16,1,0.3,1)'
 
-export const PHONE_DISPLAY = '8 800 100-91-69'
-export const PHONE_HREF = 'tel:88001009169'
+export const PHONE_DISPLAY = '+7 986 331-73-62'
+export const PHONE_HREF = 'tel:+79863317362'
