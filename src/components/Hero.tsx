@@ -218,9 +218,7 @@ function Section1({ opacity }: { opacity: number }) {
             className="font-light uppercase leading-[1.15] text-white"
             style={{ fontSize: 'clamp(2rem, 5.2vw, 5rem)', ...TEXT_SHADOW }}
           >
-            Лодки, которые
-            <br />
-            не тонут
+            Vrungel<span style={{ color: ACCENT }}>.</span>Pro
           </h1>
         </Stagger>
         <Stagger visible={visible} delay={150} className="mt-6">
@@ -260,9 +258,9 @@ function Section2({ opacity }: { opacity: number }) {
           className="font-extralight tracking-wide leading-[1.3] text-center uppercase text-white"
           style={{ fontSize: 'clamp(1.5rem, 4.3vw, 4.2rem)', ...TEXT_SHADOW }}
         >
-          Врежьтесь в камень
+          Лодки, которые
           <br />
-          на полном ходу
+          не тонут
         </h2>
       </Stagger>
 
@@ -307,7 +305,7 @@ function Section3({ opacity }: { opacity: number }) {
       <div className="max-w-2xl text-left">
         <Stagger visible={visible} delay={0}>
           <p className="text-white/60 text-lg tracking-wide mb-4" style={TEXT_SHADOW}>
-            Vrungel.Pro · Сосновый Бор
+            Собственное производство · Сосновый Бор
           </p>
         </Stagger>
         <Stagger visible={visible} delay={150}>
