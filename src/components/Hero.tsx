@@ -1,10 +1,11 @@
 import { useEffect, useState, type ReactNode, type CSSProperties } from 'react'
 import { ArrowRight, ArrowDown, ChevronUp, Phone, X } from 'lucide-react'
 import { useVideoScrub } from '@/useVideoScrub'
+import { OceanBackground } from '@/components/OceanBackground'
 import { NAVY, ACCENT, EASE, PHONE_DISPLAY, PHONE_HREF } from '@/lib/theme'
 
 // TODO: replace with real footage of Vrungel.Pro boats on water (drone / on-board shots
-// work best for the scroll-scrub effect). Until then the hero renders an animated gradient.
+// work best for the scroll-scrub effect). Until then the hero renders a procedural ocean.
 const VIDEO_SRC = ''
 
 const NAV_LINKS: { label: string; href: string }[] = [
@@ -215,9 +216,9 @@ function Section1({ opacity }: { opacity: number }) {
             className="font-light uppercase leading-[1.15] text-white"
             style={{ fontSize: 'clamp(2rem, 5.2vw, 5rem)' }}
           >
-            Лодки, которым
+            Лодки, которые
             <br />
-            не страшна вода
+            не тонут
           </h1>
         </Stagger>
         <Stagger visible={visible} delay={150} className="mt-6">
@@ -351,7 +352,7 @@ export function Hero() {
   return (
     <div id="hero" ref={containerRef} className="relative h-[500vh]">
       <div className="sticky top-0 w-full h-screen overflow-hidden">
-        {!hasVideo && <div className="absolute inset-0 hero-water-bg" />}
+        {!hasVideo && <OceanBackground />}
         <video
           ref={videoRef}
           src={hasVideo ? VIDEO_SRC : undefined}
@@ -367,6 +368,14 @@ export function Hero() {
           height={1080}
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
           style={{ opacity: hasVideo && canvasLive ? 1 : 0 }}
+        />
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 72%, rgba(0,0,0,0.3) 100%)',
+          }}
         />
 
         <div className="absolute inset-0 pointer-events-none">
