@@ -364,8 +364,8 @@ export function Hero() {
             scroll-driven redraw without adding any real sharpness. */}
         <canvas
           ref={canvasRef}
-          width={1152}
-          height={550}
+          width={1898}
+          height={908}
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
           style={{ opacity: hasVideo && canvasLive ? 1 : 0 }}
         />

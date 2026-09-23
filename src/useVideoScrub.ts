@@ -138,7 +138,7 @@ function decodeWithMP4Box(
           checkDone()
         },
         'image/webp',
-        0.75,
+        0.92,
       )
     }
 
