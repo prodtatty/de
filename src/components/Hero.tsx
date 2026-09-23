@@ -347,19 +347,25 @@ export function Hero() {
   return (
     <div id="hero" ref={containerRef} className="relative h-[500vh]">
       <div className="sticky top-0 w-full h-screen overflow-hidden">
+        {/* useVideoScrub fetches this same src itself to build the WebCodecs frame bank —
+            preload="auto" here would make the browser download the whole file a second time. */}
         <video
           ref={videoRef}
           src={hasVideo ? VIDEO_SRC : undefined}
+          poster={hasVideo ? 'videos/hero-poster.webp' : undefined}
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ opacity: hasVideo ? 1 : 0 }}
         />
+        {/* Matches hero-water.mp4's own encoded resolution — CSS already scales this element
+            to fill the viewport, so a bigger internal buffer would only add draw cost on every
+            scroll-driven redraw without adding any real sharpness. */}
         <canvas
           ref={canvasRef}
-          width={1920}
-          height={1080}
+          width={1152}
+          height={550}
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
           style={{ opacity: hasVideo && canvasLive ? 1 : 0 }}
         />

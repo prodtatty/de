@@ -138,7 +138,7 @@ function decodeWithMP4Box(
           checkDone()
         },
         'image/webp',
-        0.82,
+        0.75,
       )
     }
 
@@ -362,7 +362,11 @@ export function useVideoScrub(videoSrc: string) {
 
         if (readyRef.current) {
           drawNearestFrame(currentRef.current)
-        } else if (!revertedRef.current) {
+        } else if (revertedRef.current) {
+          // Only drive native seeking once frame-bank building has actually failed. Doing this
+          // while it's still in progress makes the browser start eagerly buffering the whole
+          // file the moment currentTime is first touched, on top of the frame bank's own fetch
+          // of the same file — the video poster covers that in-between window instead.
           if (!video.seeking && Math.abs(video.currentTime - currentRef.current) > 0.01) {
             video.currentTime = currentRef.current
           }
@@ -438,19 +442,14 @@ export function useVideoScrub(videoSrc: string) {
       }
     }
 
-    const startBuilding = () => {
-      buildFrameBank()
-    }
-    if (document.readyState === 'complete') {
-      startBuilding()
-    } else {
-      window.addEventListener('load', startBuilding, { once: true })
-    }
+    // Start decoding immediately rather than waiting for window 'load' — this is the hero's
+    // own above-the-fold content, so deferring it behind every other image on the page only
+    // stretches out how long visitors see the janky native-seek fallback before it's ready.
+    buildFrameBank()
 
     return () => {
       cancelAnimationFrame(rafRef.current)
       video.removeEventListener('loadedmetadata', onLoadedMetadata)
-      window.removeEventListener('load', startBuilding)
       try {
         decoderRef.current?.close()
       } catch {
