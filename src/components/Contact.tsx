@@ -62,6 +62,9 @@ export function Contact() {
             <a href="#gallery" className="text-xs tracking-[0.15em] uppercase text-white/40 hover:text-white/70 transition-colors">
               Галерея
             </a>
+            <a href="#faq" className="text-xs tracking-[0.15em] uppercase text-white/40 hover:text-white/70 transition-colors">
+              Вопросы
+            </a>
           </div>
         </div>
       </div>

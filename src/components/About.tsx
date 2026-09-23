@@ -93,6 +93,27 @@ export function About() {
           </a>
         </Reveal>
 
+        <div id="pnd">
+          <Reveal delay={100} className="mt-20 sm:mt-24 max-w-3xl">
+            <h3 className="text-xl sm:text-2xl font-light uppercase tracking-wide text-white">
+              Что такое ПНД?
+            </h3>
+          </Reveal>
+          <Reveal delay={180} className="mt-6 max-w-3xl space-y-4">
+            <p className="text-base sm:text-lg leading-relaxed text-white/70">
+              ПНД (полиэтилен низкого давления) — материал, из которого изготавливаются наши лодки. Он
+              отличается высокой прочностью, устойчивостью к воздействию ультрафиолетовых лучей,
+              коррозии и повреждениям.
+            </p>
+            <p className="text-base sm:text-lg leading-relaxed text-white/70">
+              Лодки ПНД популярны среди рыбаков, спортсменов, охотников и путешественников благодаря
+              своей лёгкости, прочности и удобству в использовании. Эти лодки не требуют сложного
+              ухода и легко ремонтируются в случае повреждений. Они могут использоваться как для
+              рыбалки и охоты, так и для прогулок и туризма.
+            </p>
+          </Reveal>
+        </div>
+
         <Reveal delay={100} className="mt-20 sm:mt-24">
           <h3 className="text-xl sm:text-2xl font-light uppercase tracking-wide text-white">
             Почему выбирают Vrungel.Pro

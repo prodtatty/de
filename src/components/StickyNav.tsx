@@ -49,6 +49,9 @@ export function StickyNav() {
         <a href="#gallery" className="text-xs tracking-[0.15em] uppercase text-white/70 hover:text-white transition-colors">
           Галерея
         </a>
+        <a href="#faq" className="text-xs tracking-[0.15em] uppercase text-white/70 hover:text-white transition-colors">
+          Вопросы
+        </a>
       </div>
       <a href={PHONE_HREF} className="flex items-center gap-2 text-white text-xs sm:text-sm tracking-wide font-medium">
         <Phone size={14} />

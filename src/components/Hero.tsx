@@ -13,6 +13,7 @@ const NAV_LINKS: { label: string; href: string }[] = [
   { label: 'ПРЕИМУЩЕСТВА', href: '#advantages' },
   { label: 'МОДЕЛИ', href: '#models' },
   { label: 'ГАЛЕРЕЯ', href: '#gallery' },
+  { label: 'ВОПРОСЫ', href: '#faq' },
   { label: 'КОНТАКТЫ', href: '#contact' },
 ]
 
