@@ -1,12 +1,9 @@
 import { useEffect, useState, type ReactNode, type CSSProperties } from 'react'
 import { ArrowRight, ArrowDown, ChevronUp, Phone, X } from 'lucide-react'
 import { useVideoScrub } from '@/useVideoScrub'
-import { OceanBackground } from '@/components/OceanBackground'
 import { NAVY, ACCENT, EASE, PHONE_DISPLAY, PHONE_HREF } from '@/lib/theme'
 
-// TODO: replace with real footage of Vrungel.Pro boats on water (drone / on-board shots
-// work best for the scroll-scrub effect). Until then the hero renders a procedural ocean.
-const VIDEO_SRC = ''
+const VIDEO_SRC = 'videos/hero-water.mp4'
 
 const NAV_LINKS: { label: string; href: string }[] = [
   { label: 'ГЛАВНАЯ', href: '#hero' },
@@ -59,11 +56,9 @@ function Stagger({
   )
 }
 
-function Navbar({ p, hasVideo, onOpenMenu }: { p: number; hasVideo: boolean; onOpenMenu: () => void }) {
-  // Without real footage the placeholder backdrop is uniformly dark, so keep the nav light.
-  // Once real video is in place, re-tune this against its actual brightness per scroll depth.
-  const isLight = hasVideo ? p > 0.55 : true
-  const color = isLight ? '#ffffff' : NAVY
+function Navbar({ onOpenMenu }: { onOpenMenu: () => void }) {
+  // The footage stays dark and low-key for its whole length, so the nav can stay light throughout.
+  const color = '#ffffff'
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -352,7 +347,6 @@ export function Hero() {
   return (
     <div id="hero" ref={containerRef} className="relative h-[500vh]">
       <div className="sticky top-0 w-full h-screen overflow-hidden">
-        {!hasVideo && <OceanBackground />}
         <video
           ref={videoRef}
           src={hasVideo ? VIDEO_SRC : undefined}
@@ -379,7 +373,7 @@ export function Hero() {
         />
 
         <div className="absolute inset-0 pointer-events-none">
-          <Navbar p={p} hasVideo={hasVideo} onOpenMenu={() => setMenuOpen(true)} />
+          <Navbar onOpenMenu={() => setMenuOpen(true)} />
           <Section1 opacity={s1} />
           <Section2 opacity={s2} />
           <Section3 opacity={s3} />

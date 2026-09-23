@@ -82,6 +82,7 @@ function decodeWithMP4Box(
 
     const pumpDecode = () => {
       if (!decoder || decoder.state !== 'configured') return
+      let lastFedSampleNumber = -1
       while (sampleQueue.length > 0) {
         const backlog = framesOutput - blobsCreated + decoder.decodeQueueSize
         if (backlog >= LEAD) break
@@ -93,6 +94,13 @@ function decodeWithMP4Box(
           data: sample.data,
         })
         decoder.decode(chunk)
+        lastFedSampleNumber = sample.number
+      }
+      // Only release sample buffers mp4box has actually handed to the decoder — releasing
+      // samples still sitting in sampleQueue nulls their .data out from under us (mp4box
+      // reuses the same sample objects), which throws once pumpDecode finally reaches them.
+      if (lastFedSampleNumber >= 0) {
+        mp4boxFile.releaseUsedSamples(videoTrackId, lastFedSampleNumber)
       }
       if (sampleQueue.length > 0) {
         setTimeout(pumpDecode, 0)
@@ -181,7 +189,6 @@ function decodeWithMP4Box(
       if (expectedSamples > 0 && totalSamplesSeen >= expectedSamples) {
         extractionComplete = true
       }
-      mp4boxFile.releaseUsedSamples(videoTrackId, samples[samples.length - 1].number)
       pumpDecode()
     }
 
