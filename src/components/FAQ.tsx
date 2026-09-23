@@ -119,7 +119,7 @@ function FAQItem({
     <Reveal
       delay={delay}
       className="rounded-2xl bg-white overflow-hidden"
-      style={{ boxShadow: '0 1px 3px rgba(29,48,69,0.08), 0 12px 32px -16px rgba(29,48,69,0.15)' }}
+      style={{ boxShadow: `0 1px 3px ${navyAlpha(0.08)}, 0 12px 32px -16px ${navyAlpha(0.15)}` }}
     >
       <button onClick={onToggle} className="w-full flex items-center justify-between gap-4 text-left p-5 sm:p-6" aria-expanded={isOpen}>
         <span className="text-base font-medium" style={{ color: NAVY }}>

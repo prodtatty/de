@@ -57,7 +57,7 @@ const ADVANTAGES: Advantage[] = [
 function AdvantageCard({ advantage, delay }: { advantage: Advantage; delay: number }) {
   const { title, text, video, image } = advantage
   return (
-    <Reveal delay={delay} className="rounded-2xl overflow-hidden bg-white h-full flex flex-col" style={{ boxShadow: '0 1px 3px rgba(29,48,69,0.08), 0 12px 32px -16px rgba(29,48,69,0.15)' }}>
+    <Reveal delay={delay} className="rounded-2xl overflow-hidden bg-white h-full flex flex-col" style={{ boxShadow: `0 1px 3px ${navyAlpha(0.08)}, 0 12px 32px -16px ${navyAlpha(0.15)}` }}>
       {video ? (
         <div className="relative aspect-video bg-black">
           <iframe
