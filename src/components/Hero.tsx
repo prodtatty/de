@@ -5,6 +5,13 @@ import { NAVY, ACCENT, EASE, PHONE_DISPLAY, PHONE_HREF } from '@/lib/theme'
 
 const VIDEO_SRC = 'videos/hero-water.mp4'
 
+// The water underneath swings from near-black shadow to bright mist/light-ray highlights as it
+// scrubs, so plain white text loses contrast at some scroll positions. A soft dark glow keeps it
+// readable everywhere without needing to know what's behind it at any given frame.
+const TEXT_SHADOW: CSSProperties = {
+  textShadow: '0 2px 24px rgba(0,0,0,0.55), 0 1px 6px rgba(0,0,0,0.85), 0 0 2px rgba(0,0,0,0.9)',
+}
+
 const NAV_LINKS: { label: string; href: string }[] = [
   { label: 'ГЛАВНАЯ', href: '#hero' },
   { label: 'О НАС', href: '#about' },
@@ -209,7 +216,7 @@ function Section1({ opacity }: { opacity: number }) {
         <Stagger visible={visible} delay={0}>
           <h1
             className="font-light uppercase leading-[1.15] text-white"
-            style={{ fontSize: 'clamp(2rem, 5.2vw, 5rem)' }}
+            style={{ fontSize: 'clamp(2rem, 5.2vw, 5rem)', ...TEXT_SHADOW }}
           >
             Лодки, которые
             <br />
@@ -217,7 +224,7 @@ function Section1({ opacity }: { opacity: number }) {
           </h1>
         </Stagger>
         <Stagger visible={visible} delay={150} className="mt-6">
-          <p className="text-sm tracking-[0.3em] uppercase text-white/80">
+          <p className="text-sm tracking-[0.3em] uppercase text-white/80" style={TEXT_SHADOW}>
             Корпуса из ПНД ручной формовки · Сосновый Бор
           </p>
         </Stagger>
@@ -251,11 +258,11 @@ function Section2({ opacity }: { opacity: number }) {
       <Stagger visible={visible} delay={0} className="max-w-[900px]">
         <h2
           className="font-extralight tracking-wide leading-[1.3] text-center uppercase text-white"
-          style={{ fontSize: 'clamp(1.5rem, 4.3vw, 4.2rem)' }}
+          style={{ fontSize: 'clamp(1.5rem, 4.3vw, 4.2rem)', ...TEXT_SHADOW }}
         >
-          Лист ПНД 8 мм держит удар о камни и лёд{' '}
-          <span className="text-white/80">не гниёт и не ржавеет</span>{' '}
-          <span className="text-white/50">и не тонет, даже пробитый</span>
+          Врежьтесь в камень
+          <br />
+          на полном ходу
         </h2>
       </Stagger>
 
@@ -299,12 +306,14 @@ function Section3({ opacity }: { opacity: number }) {
     >
       <div className="max-w-2xl text-left">
         <Stagger visible={visible} delay={0}>
-          <p className="text-white/60 text-lg tracking-wide mb-4">Vrungel.Pro · Сосновый Бор</p>
+          <p className="text-white/60 text-lg tracking-wide mb-4" style={TEXT_SHADOW}>
+            Vrungel.Pro · Сосновый Бор
+          </p>
         </Stagger>
         <Stagger visible={visible} delay={150}>
           <h2
             className="font-light text-white leading-[1.2] uppercase tracking-wide mb-8"
-            style={{ fontSize: 'clamp(2rem, 4vw, 4rem)' }}
+            style={{ fontSize: 'clamp(2rem, 4vw, 4rem)', ...TEXT_SHADOW }}
           >
             Выберите лодку
             <br />
@@ -312,7 +321,9 @@ function Section3({ opacity }: { opacity: number }) {
           </h2>
         </Stagger>
         <Stagger visible={visible} delay={300} className="flex items-center gap-4 pointer-events-auto">
-          <span className="text-sm tracking-[0.3em] text-white/80 uppercase">Смотреть модели</span>
+          <span className="text-sm tracking-[0.3em] text-white/80 uppercase" style={TEXT_SHADOW}>
+            Смотреть модели
+          </span>
           <a
             href="#models"
             aria-label="Смотреть модели"

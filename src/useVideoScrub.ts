@@ -264,10 +264,15 @@ export function useVideoScrub(videoSrc: string) {
       return Math.min(1, Math.max(0, window.scrollY / span))
     }
 
-    const nearestIndex = (t: number): number => {
+    // Returns the pair of bank frames straddling t and how far between them t falls (0 = lo, 1 = hi),
+    // so the caller can cross-dissolve rather than hard-cut to whichever frame is nearest — with only
+    // ~24 distinct frames per second of scroll, a hard cut is visibly steppy; a dissolve reads as motion.
+    const bracketFrames = (t: number): { lo: number; hi: number; frac: number } | null => {
       const bank = bankRef.current
-      if (bank.length === 0) return -1
+      if (bank.length === 0) return null
       const target = t * 1e6
+      if (bank.length === 1 || target <= bank[0].ts) return { lo: 0, hi: 0, frac: 0 }
+      if (target >= bank[bank.length - 1].ts) return { lo: bank.length - 1, hi: bank.length - 1, frac: 0 }
       let lo = 0
       let hi = bank.length - 1
       while (lo < hi) {
@@ -275,20 +280,19 @@ export function useVideoScrub(videoSrc: string) {
         if (bank[mid].ts < target) lo = mid + 1
         else hi = mid
       }
-      if (lo > 0) {
-        const prevDiff = Math.abs(bank[lo - 1].ts - target)
-        const currDiff = Math.abs(bank[lo].ts - target)
-        if (prevDiff < currDiff) return lo - 1
-      }
-      return lo
+      // bank[hi].ts >= target now; the bracket is [hi-1, hi]
+      const hiIdx = hi
+      const loIdx = hi - 1
+      const loTs = bank[loIdx].ts
+      const hiTs = bank[hiIdx].ts
+      const frac = hiTs > loTs ? (target - loTs) / (hiTs - loTs) : 0
+      return { lo: loIdx, hi: hiIdx, frac }
     }
 
-    const warmLRU = (centerIndex: number) => {
+    const warmLRU = (wantedIndices: number[]) => {
       const bank = bankRef.current
       const lru = lruRef.current
-      const indices = [centerIndex - 1, centerIndex, centerIndex + 1, centerIndex + 2].filter(
-        (i) => i >= 0 && i < bank.length,
-      )
+      const indices = [...new Set(wantedIndices)].filter((i) => i >= 0 && i < bank.length)
       for (const i of indices) {
         if (lru.has(i)) {
           const bmp = lru.get(i) ?? null
@@ -320,17 +324,30 @@ export function useVideoScrub(videoSrc: string) {
       }
     }
 
-    const drawNearestFrame = (t: number) => {
+    const drawInterpolatedFrame = (t: number) => {
       const canvas = canvasRef.current
       if (!canvas) return
-      const idx = nearestIndex(t)
-      if (idx < 0) return
-      warmLRU(idx)
-      const bmp = lruRef.current.get(idx)
-      if (bmp) {
-        const ctx = canvas.getContext('2d')
-        if (!ctx) return
-        ctx.drawImage(bmp, 0, 0, canvas.width, canvas.height)
+      const bracket = bracketFrames(t)
+      if (!bracket) return
+      const { lo, hi, frac } = bracket
+      warmLRU([lo - 1, lo, hi, hi + 1])
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      const bmpLo = lruRef.current.get(lo)
+      const bmpHi = hi !== lo ? lruRef.current.get(hi) : undefined
+      if (bmpLo) {
+        ctx.globalAlpha = 1
+        ctx.drawImage(bmpLo, 0, 0, canvas.width, canvas.height)
+        if (bmpHi && frac > 0) {
+          ctx.globalAlpha = frac
+          ctx.drawImage(bmpHi, 0, 0, canvas.width, canvas.height)
+          ctx.globalAlpha = 1
+        }
+      } else if (bmpHi) {
+        // lo isn't decoded yet (e.g. scrolled here before its neighborhood warmed) — show hi alone
+        // rather than nothing.
+        ctx.globalAlpha = 1
+        ctx.drawImage(bmpHi, 0, 0, canvas.width, canvas.height)
       }
     }
 
@@ -361,7 +378,7 @@ export function useVideoScrub(videoSrc: string) {
         }
 
         if (readyRef.current) {
-          drawNearestFrame(currentRef.current)
+          drawInterpolatedFrame(currentRef.current)
         } else if (revertedRef.current) {
           // Only drive native seeking once frame-bank building has actually failed. Doing this
           // while it's still in progress makes the browser start eagerly buffering the whole
