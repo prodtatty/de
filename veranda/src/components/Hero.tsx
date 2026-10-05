@@ -62,9 +62,11 @@ export default function Hero() {
         />
       ))}
       <div className="absolute inset-0 z-[1] bg-black/10" aria-hidden="true" />
+      {/* Bottom scrim keeps the copy readable over bright video frames. */}
+      <div className="absolute inset-x-0 bottom-0 z-[1] h-[70%] bg-gradient-to-t from-black/75 via-black/35 to-transparent" aria-hidden="true" />
 
       <div className="relative z-[2] mx-auto flex h-full max-w-[1340px] flex-col items-end justify-end gap-[150px] px-[15px] pt-[190px] mobile:items-start mobile:gap-[72px] mobile:px-[18px] mobile:pt-[140px]">
-        <div className="flex w-full mobile:flex-col mobile:gap-7">
+        <div className="hero-copy flex w-full mobile:flex-col mobile:gap-7">
           <div className="flex flex-[4] flex-col items-start gap-1" role="group" aria-label="Атмосфера">
             {LABELS.map((label, i) => (
               <button
@@ -94,7 +96,7 @@ export default function Hero() {
             </h1>
           </div>
           <div className="flex min-w-0 flex-1 flex-col items-start gap-6 pl-[50px] mobile:pl-0">
-            <p className="reveal-right max-w-[420px] text-base font-medium leading-6 tracking-[-0.16px]">
+            <p className="hero-copy reveal-right max-w-[460px] text-[17px] font-semibold leading-6 tracking-[-0.16px]">
               Семейная кофейня «Веранда», в которой всегда большой выбор вкусного кофе и чая! На выбор гостю предоставлены альтернативные методы заваривания кофе, растительное молоко. В ассортименте десерты и закуски собственного приготовления. Иногда Вам может сварить кофе сам хозяин, а хозяйку можно застать за обновлением внутреннего декора.</p>
             <a href="#reviews" className="reveal-right reveal-delay cta-fill border border-white px-5 py-3 text-sm font-medium lowercase">
               отзывы гостей

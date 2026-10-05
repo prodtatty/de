@@ -8,18 +8,21 @@ export default function Menu() {
         Меню<span className="text-[#F598F2]">.</span>
       </h2>
       {MENU.length ? (
-        <div className="grid gap-12 md:grid-cols-2">
+        <div className="flex flex-col gap-16">
           {MENU.map(group => (
             <div key={group.title}>
-              <h3 className="mb-4 text-xs font-medium uppercase tracking-[0.04em] text-white/55">{group.title}</h3>
-              <ul className="divide-y divide-white/10">
+              <h3 className="mb-6 text-2xl font-medium uppercase tracking-[-0.5px]">{group.title}</h3>
+              <ul className="grid grid-cols-4 gap-5 md-tablet:grid-cols-3 mobile:grid-cols-2 mobile:gap-3">
                 {group.items.map(d => (
-                  <li key={d.name} className="flex items-baseline justify-between gap-6 py-3">
-                    <div className="min-w-0">
-                      <p className="font-medium">{d.name}</p>
-                      {d.description && <p className="text-sm text-white/55">{d.description}</p>}
+                  <li key={d.name} className="flex flex-col overflow-hidden rounded-lg border border-white/12 bg-white/[0.04]">
+                    {d.image && (
+                      <img src={d.image} alt={d.name} loading="lazy" className="aspect-square w-full object-cover" />
+                    )}
+                    <div className="flex flex-1 flex-col gap-2 p-4 mobile:p-3">
+                      <p className="font-semibold leading-5">{d.name}</p>
+                      {d.description && <p className="text-sm leading-5 text-white/65 mobile:text-xs">{d.description}</p>}
+                      <p className="mt-auto pt-2 text-lg font-semibold tabular-nums text-[#F598F2]">{d.price}</p>
                     </div>
-                    <span className="shrink-0 tabular-nums">{d.price}</span>
                   </li>
                 ))}
               </ul>

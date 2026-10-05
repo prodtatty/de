@@ -1,4 +1,5 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
+import { useConsent } from '../lib/consent'
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react'
 import { BUSINESS } from '../config'
 import { REVIEWS } from '../data/reviews'
@@ -15,6 +16,8 @@ function Stars({ value }: { value: number }) {
 
 export default function Reviews() {
   const track = useRef<HTMLUListElement>(null)
+  const consent = useConsent()
+  const [manual, setManual] = useState(false)
   const scroll = (dir: number) => {
     const el = track.current
     if (el) el.scrollBy({ left: dir * (el.clientWidth * 0.8), behavior: 'smooth' })
@@ -30,6 +33,20 @@ export default function Reviews() {
           все отзывы на яндекс картах
         </a>
       </div>
+
+      {/* Until reviews are copied into data/reviews.ts, show the live Yandex widget (loads only with consent). */}
+      {REVIEWS.length === 0 && (
+        <div className="h-[800px] w-full overflow-hidden rounded-lg border border-white/15 mobile:h-[640px]">
+          {consent === 'all' || manual ? (
+            <iframe title="Отзывы о кофейне Веранда на Яндекс Картах" src={`https://yandex.ru/maps-reviews-widget/${BUSINESS.yandexOrgId}?comments`} className="h-full w-full border-0 bg-white" loading="lazy" />
+          ) : (
+            <div className="flex h-full flex-col items-center justify-center gap-5 bg-neutral-950 p-8 text-center">
+              <p className="max-w-[460px] text-white/80">Отзывы загружаются с Яндекс Карт. Сервис может устанавливать собственные cookie.</p>
+              <button type="button" onClick={() => setManual(true)} className="cta-fill border border-white px-5 py-3 text-sm font-medium lowercase">показать отзывы</button>
+            </div>
+          )}
+        </div>
+      )}
 
       {REVIEWS.length > 0 && (
         <div className="relative">
