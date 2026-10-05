@@ -19,7 +19,14 @@ export default function Reviews() {
       </div>
 
       <div className="relative h-[800px] w-full overflow-hidden rounded-lg border border-white/15 bg-white mobile:h-[640px]">
-        {show ? (
+        {/* Preview hosts that forbid third-party iframes build with VITE_PREVIEW=1. */}
+        {import.meta.env.VITE_PREVIEW ? (
+          <div className="flex h-full flex-col items-center justify-center gap-5 bg-neutral-950 p-8 text-center">
+            <p className="max-w-[460px] text-white/75">
+              Это превью: здесь виджет Яндекс Карт не загружается. На опубликованном сайте в этом блоке будут живые отзывы гостей.
+            </p>
+          </div>
+        ) : show ? (
           <iframe
             title="Отзывы о кофейне Веранда на Яндекс Картах"
             src={`https://yandex.ru/maps-reviews-widget/${BUSINESS.yandexOrgId}?comments`}
