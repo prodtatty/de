@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Menu from './components/Menu'
 import Reviews from './components/Reviews'
+import Contacts from './components/Contacts'
 import Footer from './components/Footer'
 import CookieBanner from './components/CookieBanner'
 import { ConsentDoc, Cookies, Privacy } from './components/Legal'
@@ -35,6 +36,7 @@ export default function App() {
           <Hero />
           <Menu />
           <Reviews />
+          <Contacts />
         </main>
       )}
       <Footer />
