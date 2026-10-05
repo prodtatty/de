@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 const NAV = [
-  { label: 'Главная', href: '#top' },
+  { label: 'Меню', href: '#menu' },
   { label: 'Отзывы', href: '#reviews' },
   { label: 'Контакты', href: '#contacts' },
   { label: 'Документы', href: '#/privacy' },

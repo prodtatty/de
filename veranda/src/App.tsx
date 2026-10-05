@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
+import Menu from './components/Menu'
 import Reviews from './components/Reviews'
 import Footer from './components/Footer'
 import CookieBanner from './components/CookieBanner'
@@ -21,7 +22,7 @@ export default function App() {
   useEffect(() => {
     const id = hash.slice(1)
     const target = id && !id.startsWith('/') ? document.getElementById(id) : null
-    if (target) target.scrollIntoView()
+    if (target) target.scrollIntoView({ behavior: 'smooth' })
     else window.scrollTo(0, 0)
   }, [hash])
 
@@ -32,6 +33,7 @@ export default function App() {
       {LegalPage ? <LegalPage /> : (
         <main id="top">
           <Hero />
+          <Menu />
           <Reviews />
         </main>
       )}

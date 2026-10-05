@@ -95,8 +95,7 @@ export default function Hero() {
           </div>
           <div className="flex min-w-0 flex-1 flex-col items-start gap-6 pl-[50px] mobile:pl-0">
             <p className="reveal-right max-w-[420px] text-base font-medium leading-6 tracking-[-0.16px]">
-              Кофейня, где утро начинается правильно: свежая обжарка, авторские напитки, домашние десерты и тёплая атмосфера веранды.
-            </p>
+              Семейная кофейня «Веранда», в которой всегда большой выбор вкусного кофе и чая! На выбор гостю предоставлены альтернативные методы заваривания кофе, растительное молоко. В ассортименте десерты и закуски собственного приготовления. Иногда Вам может сварить кофе сам хозяин, а хозяйку можно застать за обновлением внутреннего декора.</p>
             <a href="#reviews" className="reveal-right reveal-delay cta-fill border border-white px-5 py-3 text-sm font-medium lowercase">
               отзывы гостей
             </a>
