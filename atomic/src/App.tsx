@@ -238,8 +238,8 @@ function MenuList({ group, reveal = true }: { group: MenuGroup; reveal?: boolean
               <span className="text-[15px] font-normal">{d.name}</span>
               <span className="leader" />
               <span className="whitespace-nowrap text-[14px] tabular-nums text-ivory/85">
+                <span className="mr-1.5 text-stone">от</span>
                 {d.price}
-                <span className="ml-1 text-stone">₽</span>
               </span>
             </div>
             {d.note && <p className="mt-1 text-[13px] text-stone">{d.note}</p>}
