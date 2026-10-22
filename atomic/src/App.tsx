@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { contacts, grill, menu, services, type MenuGroup } from './data'
+import { contacts, grill, menu, services, type MenuGroup, type Service } from './data'
 
 function useReveal() {
   useEffect(() => {
@@ -361,7 +361,81 @@ function Grill() {
   )
 }
 
+function ServiceItem({
+  service,
+  index,
+  open,
+  onToggle,
+}: {
+  service: Service
+  index: number
+  open: boolean
+  onToggle: () => void
+}) {
+  const id = `service-${index}`
+  return (
+    <li className="reveal border-b border-line">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={onToggle}
+        className="group grid w-full grid-cols-[1fr_auto] gap-x-6 gap-y-3 py-9 text-left md:grid-cols-12 md:items-baseline md:gap-8 md:py-11"
+      >
+        <span className="font-serif text-lg text-bronze md:col-span-1">{String(index + 1).padStart(2, '0')}</span>
+        <span
+          aria-hidden
+          className={`relative row-span-2 mt-2 h-4 w-4 self-start justify-self-end transition-transform duration-700 md:order-last md:col-span-1 md:row-span-1 md:mt-0 md:self-center ${
+            open ? 'rotate-45' : 'group-hover:rotate-90'
+          }`}
+        >
+          <span className="absolute left-0 top-1/2 h-px w-4 bg-ivory/70" />
+          <span className="absolute left-1/2 top-0 h-4 w-px bg-ivory/70" />
+        </span>
+        <h3 className="font-serif text-[30px] font-normal leading-tight transition-transform duration-700 group-hover:translate-x-2 md:col-span-6 md:text-[40px]">
+          {service.title}
+        </h3>
+        <p className="col-span-2 text-[14px] leading-[1.75] text-stone md:col-span-4 md:col-start-8">{service.text}</p>
+      </button>
+
+      <div
+        id={id}
+        role="region"
+        className={`grid transition-[grid-template-rows,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="grid gap-12 pb-14 md:grid-cols-12 md:gap-8 md:pb-16">
+            <div className="space-y-5 md:col-span-6 md:col-start-2">
+              {service.story.map((p) => (
+                <p key={p} className="font-serif text-[21px] leading-[1.55] text-ivory/85 md:text-[23px]">
+                  {p}
+                </p>
+              ))}
+            </div>
+            <div className="md:col-span-4 md:col-start-8">
+              <p className="eyebrow">Что входит</p>
+              <ul className="mt-5 border-t border-line">
+                {service.includes.map((item) => (
+                  <li key={item} className="border-b border-line py-3.5 text-[14px] text-ivory/80">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <a href={contacts.phoneHref} className="link-line mt-8 inline-block text-[13px] text-ivory">
+                Обсудить по телефону · {contacts.phone}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  )
+}
+
 function Services() {
+  const [openService, setOpenService] = useState<number | null>(null)
   return (
     <section id="services" className="border-t border-line bg-ink2">
       <div className="mx-auto max-w-[1400px] px-5 py-32 md:px-[6vw] md:py-52">
@@ -378,16 +452,13 @@ function Services() {
 
         <ol className="mt-24 border-t border-line">
           {services.map((s, i) => (
-            <li
+            <ServiceItem
               key={s.title}
-              className="reveal group grid gap-3 border-b border-line py-9 md:grid-cols-12 md:items-baseline md:gap-8 md:py-11"
-            >
-              <span className="font-serif text-lg text-bronze md:col-span-1">{String(i + 1).padStart(2, '0')}</span>
-              <h3 className="font-serif text-[30px] font-normal leading-tight transition-transform duration-700 group-hover:translate-x-2 md:col-span-6 md:text-[40px]">
-                {s.title}
-              </h3>
-              <p className="text-[14px] leading-[1.75] text-stone md:col-span-4 md:col-start-9">{s.text}</p>
-            </li>
+              index={i}
+              service={s}
+              open={openService === i}
+              onToggle={() => setOpenService(openService === i ? null : i)}
+            />
           ))}
         </ol>
 
