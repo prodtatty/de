@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [claude/cinematic-scroll-video-site-g0hxfr, claude/compassionate-euler-zxmal9]
+    branches: [claude/cinematic-scroll-video-site-g0hxfr, claude/compassionate-euler-zxmal9, claude/great-galileo-cjkhuj]
   workflow_dispatch:
 
 permissions:
@@ -32,6 +32,13 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Build ATOMIC
+        if: hashFiles('atomic/package-lock.json') != ''
+        run: |
+          npm ci --prefix atomic
+          npm run build --prefix atomic
+          cp -r atomic/dist dist/atomic
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
