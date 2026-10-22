@@ -224,12 +224,26 @@ function About() {
   )
 }
 
+const formatPrice = (n: number) => n.toLocaleString('ru-RU')
+
 function MenuList({ group, reveal = true }: { group: MenuGroup; reveal?: boolean }) {
+  const priceCell = 'w-[4.5rem] shrink-0 text-right md:w-20'
   return (
-    <div className={`${reveal ? 'reveal ' : ''}break-inside-avoid pb-16`}>
-      <div className="flex items-baseline justify-between border-b border-line pb-4">
-        <h3 className="font-serif text-[28px] font-normal italic">{group.title}</h3>
-        {group.aside && <span className="eyebrow">{group.aside}</span>}
+    <div className={`${reveal ? 'reveal ' : ''}pb-16`}>
+      <div className="flex items-end justify-between gap-4 border-b border-line pb-4">
+        <div>
+          <h3 className="font-serif text-[28px] font-normal italic leading-tight">{group.title}</h3>
+          {group.note && <p className="mt-1 text-[13px] text-stone">{group.note}</p>}
+        </div>
+        {group.sizes && (
+          <div className="flex pb-1">
+            {group.sizes.map((s) => (
+              <span key={s} className={`eyebrow ${priceCell}`}>
+                {s}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
       <ul className="mt-6 space-y-5">
         {group.items.map((d) => (
@@ -237,12 +251,16 @@ function MenuList({ group, reveal = true }: { group: MenuGroup; reveal?: boolean
             <div className="flex items-baseline gap-3">
               <span className="text-[15px] font-normal">{d.name}</span>
               <span className="leader" />
-              <span className="whitespace-nowrap text-[14px] tabular-nums text-ivory/85">
-                <span className="mr-1.5 text-stone">от</span>
-                {d.price}
+              <span className="flex whitespace-nowrap text-[14px] tabular-nums text-ivory/85">
+                {d.prices.map((p, i) => (
+                  <span key={i} className={group.sizes ? priceCell : ''}>
+                    <span className="mr-1.5 text-stone">от</span>
+                    {formatPrice(p)}
+                  </span>
+                ))}
               </span>
             </div>
-            {d.note && <p className="mt-1 text-[13px] text-stone">{d.note}</p>}
+            {d.note && <p className="mt-1.5 max-w-md text-[13px] leading-relaxed text-stone">{d.note}</p>}
           </li>
         ))}
       </ul>
@@ -259,6 +277,8 @@ const tabs = [
 function Menu() {
   const [tab, setTab] = useState<(typeof tabs)[number]['id']>('kitchen')
   const [fading, setFading] = useState(false)
+  const panel = useRef<HTMLDivElement>(null)
+  const tablist = useRef<HTMLDivElement>(null)
 
   const select = (id: typeof tab) => {
     if (id === tab) return
@@ -266,6 +286,9 @@ function Menu() {
     window.setTimeout(() => {
       setTab(id)
       setFading(false)
+      // если читали глубоко в списке — возвращаем к началу нового раздела
+      const top = panel.current!.getBoundingClientRect().top + window.scrollY - tablist.current!.offsetHeight - 80
+      if (window.scrollY > top) window.scrollTo({ top, behavior: 'smooth' })
     }, 350)
   }
 
@@ -281,7 +304,11 @@ function Menu() {
           </p>
         </div>
 
-        <div className="reveal mt-20 flex gap-10 border-b border-line" role="tablist">
+        <div
+          ref={tablist}
+          className="reveal sticky top-[61px] z-10 mt-20 flex gap-10 border-b border-line bg-ink2 pt-5"
+          role="tablist"
+        >
           {tabs.map((t) => (
             <button
               key={t.id}
@@ -303,7 +330,8 @@ function Menu() {
         </div>
 
         <div
-          className={`mt-16 gap-x-24 transition-opacity duration-300 md:columns-2 ${fading ? 'opacity-0' : 'opacity-100'}`}
+          ref={panel}
+          className={`mt-16 grid items-start gap-x-24 transition-opacity duration-300 md:grid-cols-2 ${fading ? 'opacity-0' : 'opacity-100'}`}
           role="tabpanel"
         >
           {menu[tab].map((g) => (
