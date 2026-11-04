@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { contacts, grill, menu, services, type MenuGroup, type Service } from './data'
+import { EDITION, legalDocs, type Block, type LegalDoc } from './legal'
 
-function useReveal() {
+function useReveal(page: string) {
   useEffect(() => {
     const els = document.querySelectorAll('.reveal')
     const io = new IntersectionObserver(
@@ -17,7 +18,7 @@ function useReveal() {
     )
     els.forEach((el) => io.observe(el))
     return () => io.disconnect()
-  }, [])
+  }, [page])
 }
 
 function useParallax<T extends HTMLElement>(strength = 0.08) {
@@ -73,8 +74,8 @@ function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 md:px-[6vw]">
-        <a href="#top" className="font-serif text-xl tracking-[0.32em]" onClick={() => setOpen(false)}>
-          ATOMIC
+        <a href="#top" onClick={() => setOpen(false)} aria-label="Моторфест — на главную">
+          <img src="./images/logo-sm.webp" alt="Моторфест" width={503} height={130} className="h-8 w-auto md:h-9" />
         </a>
         <nav className="hidden items-center gap-10 lg:flex">
           {nav.map((n) => (
@@ -130,7 +131,7 @@ function Header() {
   )
 }
 
-const OPEN_SERVICE = 'atomic:open-service'
+const OPEN_SERVICE = 'motorfest:open-service'
 const requestOpenService = (index: number) => window.dispatchEvent(new CustomEvent(OPEN_SERVICE, { detail: index }))
 
 function Hero() {
@@ -140,15 +141,23 @@ function Hero() {
         src="./images/hall.webp"
         srcSet="./images/hall-800.webp 800w, ./images/hall.webp 1600w"
         sizes="100vw"
-        alt="Зал кафе ATOMIC с панорамными окнами на трассу картинга"
+        alt="Зал кафе «Моторфест» с панорамными окнами на трассу картинга"
         className="graded settle absolute inset-0 h-full w-full object-cover"
         fetchPriority="high"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-ink/30" />
       <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-14 md:px-[6vw] md:pb-20">
         <p className="eyebrow reveal">Сосновый Бор</p>
-        <h1 className="reveal mt-6 font-serif text-[22vw] font-normal leading-[0.85] tracking-[0.04em] md:text-[13vw] xl:text-[200px]">
-          ATOMIC
+        <h1 className="reveal mt-6">
+          <img
+            src="./images/logo.webp"
+            srcSet="./images/logo-sm.webp 503w, ./images/logo.webp 1007w"
+            sizes="(min-width: 768px) 760px, 92vw"
+            alt="Моторфест"
+            width={1007}
+            height={261}
+            className="-ml-[2%] h-auto w-[92vw] max-w-[760px]"
+          />
         </h1>
         <div className="reveal mt-10 flex flex-col gap-8 border-t border-line pt-8 md:flex-row md:items-end md:justify-between">
           <p className="max-w-lg font-serif text-2xl italic leading-snug text-ivory/90 md:text-3xl">
@@ -516,7 +525,17 @@ function Services() {
 function Contacts() {
   return (
     <section id="contacts" className="mx-auto max-w-[1400px] border-t border-line px-5 pb-16 pt-32 md:px-[6vw] md:pt-52">
-      <SectionHead index="05" eyebrow="Бронирование и контакты" title={<>Ждём вас<br />у трассы</>} />
+      <div className="relative">
+        <SectionHead index="05" eyebrow="Бронирование и контакты" title={<>Ждём вас<br />у трассы</>} />
+        <img
+          src="./images/racer.webp"
+          alt="Талисман «Моторфеста» с клетчатым флагом"
+          width={480}
+          height={493}
+          loading="lazy"
+          className="reveal absolute bottom-0 right-0 w-[104px] md:right-[4%] md:w-[168px]"
+        />
+      </div>
 
       <div className="mt-24 grid border-t border-line md:grid-cols-3">
         <div className="reveal border-b border-line py-10 md:border-b-0 md:border-r md:pr-10">
@@ -545,36 +564,222 @@ function Contacts() {
           <p className="mt-3 text-[13px] text-stone">Ежедневно · мангал пт–вс</p>
         </div>
       </div>
-
-      <footer className="mt-32 flex flex-col gap-6 border-t border-line pt-10 text-[12px] text-stone md:flex-row md:items-center md:justify-between">
-        <span className="font-serif text-lg tracking-[0.32em] text-ivory">ATOMIC</span>
-        <span>Кафе Сосновоборской школы картинга</span>
-        <div className="flex gap-8">
-          <a href={contacts.vkHref} target="_blank" rel="noreferrer" className="link-line">
-            ВКонтакте
-          </a>
-          <a href="#top" className="link-line">
-            Наверх
-          </a>
-        </div>
-      </footer>
     </section>
   )
 }
 
+function Footer() {
+  return (
+    <footer className="mx-auto max-w-[1400px] px-5 pb-12 md:px-[6vw]">
+      <div className="flex flex-col gap-10 border-t border-line pt-10 md:flex-row md:items-start md:justify-between">
+        <div>
+          <img src="./images/logo-sm.webp" alt="Моторфест" width={503} height={130} loading="lazy" className="h-9 w-auto" />
+          <p className="mt-4 text-[12px] text-stone">Кафе и кейтеринг у трассы Сосновоборской школы картинга</p>
+        </div>
+        <nav aria-label="Документы" className="flex flex-col gap-3 text-[12px] text-stone">
+          {legalDocs.map((d) => (
+            <a key={d.slug} href={`#/${d.slug}`} className="link-line self-start hover:text-ivory">
+              {d.title}
+            </a>
+          ))}
+        </nav>
+        <div className="flex gap-8 text-[12px] text-stone">
+          <a href={contacts.vkHref} target="_blank" rel="noreferrer" className="link-line hover:text-ivory">
+            ВКонтакте
+          </a>
+          <a href="#top" className="link-line hover:text-ivory">
+            Наверх
+          </a>
+        </div>
+      </div>
+      <p className="mt-10 text-[11px] text-stone/70">© 2026 Моторфест</p>
+    </footer>
+  )
+}
+
+// подсвечиваем незаполненные реквизиты, чтобы их нельзя было пропустить
+function LegalText({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/(\[ЗАПОЛНИТЬ[^\]]*\])/).map((part, i) =>
+        part.startsWith('[ЗАПОЛНИТЬ') ? (
+          <mark key={i} className="bg-bronze/20 px-1 text-bronze">
+            {part}
+          </mark>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  )
+}
+
+function LegalBlock({ block }: { block: Block }) {
+  if (typeof block === 'string') {
+    return (
+      <p>
+        <LegalText text={block} />
+      </p>
+    )
+  }
+  return (
+    <ul className="space-y-2 border-l border-line pl-5">
+      {block.list.map((item) => (
+        <li key={item}>
+          <LegalText text={item} />
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function LegalPage({ doc }: { doc: LegalDoc }) {
+  return (
+    <main className="mx-auto max-w-[1400px] px-5 pb-32 pt-36 md:px-[6vw] md:pt-48">
+      <a href="#top" className="link-line eyebrow hover:text-ivory">
+        ← На главную
+      </a>
+      <div className="mt-14 grid gap-16 md:grid-cols-12 md:gap-8">
+        <article className="md:col-span-8">
+          <p className="eyebrow">Документы</p>
+          <h1 className="mt-6 font-serif text-[40px] font-normal leading-[1.05] md:text-[64px]">{doc.title}</h1>
+          <p className="mt-8 max-w-xl text-[16px] leading-[1.8] text-ivory/80">{doc.lead}</p>
+          <p className="eyebrow mt-6">{EDITION}</p>
+
+          <div className="mt-16 border-t border-line">
+            {doc.sections.map((sec, i) => (
+              <section key={sec.title} className="border-b border-line py-10">
+                <h2 className="font-serif text-[26px] font-normal md:text-[30px]">
+                  <span className="mr-4 text-bronze">{i + 1}</span>
+                  {sec.title}
+                </h2>
+                <div className="mt-5 max-w-2xl space-y-4 text-[15px] leading-[1.8] text-ivory/75">
+                  {sec.blocks.map((b, j) => (
+                    <LegalBlock key={j} block={b} />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        </article>
+        <aside className="md:col-span-3 md:col-start-10">
+          <div className="md:sticky md:top-32">
+            <p className="eyebrow">Все документы</p>
+            <ul className="mt-5 border-t border-line">
+              {legalDocs.map((d) => (
+                <li key={d.slug} className="border-b border-line py-4">
+                  {d.slug === doc.slug ? (
+                    <span className="text-[14px] text-ivory">{d.title}</span>
+                  ) : (
+                    <a href={`#/${d.slug}`} className="link-line text-[14px] text-stone hover:text-ivory">
+                      {d.title}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </main>
+  )
+}
+
+const CONSENT_KEY = 'motorfest-cookie-consent'
+
+function CookieNotice() {
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    let accepted = false
+    try {
+      accepted = localStorage.getItem(CONSENT_KEY) === '1'
+    } catch {
+      // хранилище недоступно (приватный режим) — просто показываем уведомление
+    }
+    if (accepted) return
+    const t = window.setTimeout(() => setVisible(true), 1200)
+    return () => window.clearTimeout(t)
+  }, [])
+
+  const accept = () => {
+    try {
+      localStorage.setItem(CONSENT_KEY, '1')
+    } catch {
+      // без хранилища уведомление вернётся при следующем визите
+    }
+    setVisible(false)
+  }
+
+  return (
+    <div
+      role="region"
+      aria-label="Уведомление о cookie"
+      className={`fixed inset-x-3 bottom-3 z-[60] flex items-center gap-4 border border-line bg-ink2/95 p-4 backdrop-blur transition-[opacity,transform] duration-700 md:inset-x-auto md:bottom-6 md:left-6 md:max-w-[440px] md:gap-6 md:p-5 ${
+        visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'
+      }`}
+    >
+      <p className="text-[12px] leading-[1.65] text-ivory/80 md:text-[13px]">
+        Сайт использует файлы cookie. Подробнее — в{' '}
+        <a href="#/cookies" className="underline decoration-line underline-offset-4 hover:text-ivory">
+          Политике cookie
+        </a>{' '}
+        и{' '}
+        <a href="#/privacy" className="underline decoration-line underline-offset-4 hover:text-ivory">
+          Политике конфиденциальности
+        </a>
+        .
+      </p>
+      <button
+        type="button"
+        onClick={accept}
+        className="shrink-0 border border-ivory/40 px-4 py-2.5 text-[11px] uppercase tracking-[0.2em] transition-colors duration-500 hover:border-ivory hover:bg-ivory hover:text-ink md:px-6"
+      >
+        Подтвердить
+      </button>
+    </div>
+  )
+}
+
+const docFromHash = () => legalDocs.find((d) => window.location.hash === `#/${d.slug}`) ?? null
+
 export default function App() {
-  useReveal()
+  const [doc, setDoc] = useState<LegalDoc | null>(docFromHash)
+  useReveal(doc?.slug ?? 'home')
+
+  useEffect(() => {
+    const onHash = () => setDoc(docFromHash())
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
+  // при смене страницы: документ открываем сверху, на главной — переходим к нужному разделу
+  useEffect(() => {
+    if (doc) {
+      window.scrollTo({ top: 0 })
+      return
+    }
+    const id = window.location.hash.slice(1)
+    if (id) document.getElementById(id)?.scrollIntoView()
+  }, [doc])
+
   return (
     <>
       <Header />
-      <main>
-        <Hero />
-        <Services />
-        <About />
-        <Menu />
-        <Grill />
-        <Contacts />
-      </main>
+      {doc ? (
+        <LegalPage doc={doc} />
+      ) : (
+        <main>
+          <Hero />
+          <Services />
+          <About />
+          <Menu />
+          <Grill />
+          <Contacts />
+        </main>
+      )}
+      <Footer />
+      <CookieNotice />
     </>
   )
 }
