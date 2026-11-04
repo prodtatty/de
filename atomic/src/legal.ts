@@ -4,6 +4,7 @@ export const operator = {
   fullName: 'Общество с ограниченной ответственностью «КАДИС»',
   name: 'ООО «КАДИС»',
   director: 'Мочалова Светлана Владимировна',
+  legalAddress: '188544, Ленинградская область, г.о. Сосновоборский, г. Сосновый Бор, ул. Малая Земля, дом 6, квартира 21',
   inn: '4707056686',
   ogrn: '1244700020685',
 }
@@ -80,6 +81,7 @@ export const legalDocs: LegalDoc[] = [
           {
             list: [
               `Оператор: ${operator.name}, ИНН ${operator.inn}, ОГРН ${operator.ogrn}`,
+              `Юридический адрес: ${operator.legalAddress}`,
               `Адрес для обращений: ${contacts.address}`,
               `Телефоны: ${phones}`,
             ],
@@ -110,6 +112,7 @@ export const legalDocs: LegalDoc[] = [
               `ИНН: ${operator.inn}`,
               `ОГРН: ${operator.ogrn}`,
               `Генеральный директор: ${operator.director}`,
+              `Юридический адрес: ${operator.legalAddress}`,
               `Адрес для обращений: ${contacts.address}`,
               `Телефоны: ${phones}`,
             ],
