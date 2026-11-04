@@ -148,7 +148,7 @@ function Hero() {
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-ink/30" />
       <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-14 md:px-[6vw] md:pb-20">
         <p className="reveal text-[11px] uppercase tracking-[0.22em] text-ivory/70">Сосновый Бор</p>
-        <h1 className="reveal mt-6 whitespace-nowrap font-sans text-[min(10.5vw,124px)] font-extralight uppercase italic leading-none tracking-[0.18em]">
+        <h1 className="reveal mt-4 whitespace-nowrap font-serif text-[min(17.5vw,190px)] font-normal italic leading-[1.05] -tracking-[0.005em]">
           Моторрест
         </h1>
         <div className="reveal mt-10 flex flex-col gap-8 border-t border-line pt-8 md:flex-row md:items-end md:justify-between">
