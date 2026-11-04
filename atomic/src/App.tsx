@@ -13,7 +13,7 @@ function useReveal() {
           }
         })
       },
-      { rootMargin: '0px 0px -10% 0px' },
+      { rootMargin: '0px 0px -4% 0px' },
     )
     els.forEach((el) => io.observe(el))
     return () => io.disconnect()
@@ -44,10 +44,10 @@ function useParallax<T extends HTMLElement>(strength = 0.08) {
 }
 
 const nav = [
+  { href: '#services', label: 'Услуги' },
   { href: '#menu', label: 'Меню' },
   { href: '#about', label: 'О нас' },
   { href: '#grill', label: 'Мангал' },
-  { href: '#services', label: 'Услуги' },
   { href: '#contacts', label: 'Контакты' },
 ]
 
@@ -83,7 +83,7 @@ function Header() {
             </a>
           ))}
           <a
-            href={contacts.phoneHref}
+            href={contacts.phones[0].href}
             className="border border-ivory/40 px-5 py-2.5 text-[12px] uppercase tracking-[0.18em] transition-colors duration-500 hover:border-ivory hover:bg-ivory hover:text-ink"
           >
             Забронировать
@@ -118,15 +118,20 @@ function Header() {
           ))}
         </nav>
         <div className="mt-12 space-y-2">
-          <p className="eyebrow">Бронирование</p>
-          <a href={contacts.phoneHref} className="block font-serif text-3xl">
-            {contacts.phone}
-          </a>
+          <p className="eyebrow">Бронирование и заказы</p>
+          {contacts.phones.map((ph) => (
+            <a key={ph.href} href={ph.href} className="block font-serif text-3xl">
+              {ph.label}
+            </a>
+          ))}
         </div>
       </div>
     </header>
   )
 }
+
+const OPEN_SERVICE = 'atomic:open-service'
+const requestOpenService = (index: number) => window.dispatchEvent(new CustomEvent(OPEN_SERVICE, { detail: index }))
 
 function Hero() {
   return (
@@ -146,14 +151,29 @@ function Hero() {
           ATOMIC
         </h1>
         <div className="reveal mt-10 flex flex-col gap-8 border-t border-line pt-8 md:flex-row md:items-end md:justify-between">
-          <p className="max-w-md font-serif text-2xl italic leading-snug text-ivory/90 md:text-3xl">
-            Кухня и бар у старт-финишной прямой
+          <p className="max-w-lg font-serif text-2xl italic leading-snug text-ivory/90 md:text-3xl">
+            Кейтеринг, банкеты и кухня у старт-финишной прямой
           </p>
           <div className="flex flex-col gap-1 text-[13px] text-stone md:text-right">
             <span>{contacts.address}</span>
             <span>{contacts.hours}</span>
           </div>
         </div>
+        <nav aria-label="Услуги" className="reveal mt-8 flex flex-wrap gap-x-5 gap-y-2">
+          {services.map((s, i) => (
+            <a
+              key={s.short}
+              href={`#service-item-${i}`}
+              onClick={(e) => {
+                e.preventDefault()
+                requestOpenService(i)
+              }}
+              className="link-line text-[11px] uppercase tracking-[0.22em] text-ivory/85 transition-colors hover:text-ivory md:text-[12px]"
+            >
+              {s.short}
+            </a>
+          ))}
+        </nav>
       </div>
     </section>
   )
@@ -178,7 +198,7 @@ function About() {
     <section id="about" className="mx-auto max-w-[1400px] px-5 py-32 md:px-[6vw] md:py-52">
       <div className="grid gap-16 md:grid-cols-12 md:gap-8">
         <div className="md:col-span-5">
-          <SectionHead index="01" eyebrow="О нас" title={<>Кухня, построенная вместе с трассой</>} />
+          <SectionHead index="02" eyebrow="О нас" title={<>Кухня, построенная вместе с трассой</>} />
           <div className="reveal mt-12 max-w-md space-y-6 text-[15px] leading-[1.8] text-ivory/75">
             <p>
               Когда здесь появилась трасса, вокруг были только шоссе и лес. Гости уезжали после заезда, так и не
@@ -297,7 +317,7 @@ function Menu() {
       <div className="mx-auto max-w-[1400px] px-5 py-32 md:px-[6vw] md:py-52">
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-6">
-            <SectionHead index="02" eyebrow="Меню" title="Что подаём" />
+            <SectionHead index="03" eyebrow="Меню" title="Что подаём" />
           </div>
           <p className="reveal self-end text-[14px] leading-[1.8] text-stone md:col-span-4 md:col-start-9">
             Домашняя кухня, бар и десерты собственного производства. Цены в рублях.
@@ -348,7 +368,7 @@ function Grill() {
     <section id="grill" className="mx-auto max-w-[1400px] px-5 py-32 md:px-[6vw] md:py-52">
       <div className="grid gap-16 md:grid-cols-12">
         <div className="md:col-span-5">
-          <SectionHead index="03" eyebrow="Мангал" title="Пятница, суббота, воскресенье" />
+          <SectionHead index="04" eyebrow="Мангал" title="Пятница, суббота, воскресенье" />
           <p className="reveal mt-10 max-w-sm text-[15px] leading-[1.8] text-ivory/75">
             По выходным разжигаем мангал. Мясо на углях, свежий воздух и вид на трассу.
           </p>
@@ -374,7 +394,7 @@ function ServiceItem({
 }) {
   const id = `service-${index}`
   return (
-    <li className="reveal border-b border-line">
+    <li id={`service-item-${index}`} className="reveal border-b border-line">
       <button
         type="button"
         aria-expanded={open}
@@ -423,9 +443,14 @@ function ServiceItem({
                   </li>
                 ))}
               </ul>
-              <a href={contacts.phoneHref} className="link-line mt-8 inline-block text-[13px] text-ivory">
-                Обсудить по телефону · {contacts.phone}
-              </a>
+              <p className="eyebrow mt-8">Обсудить по телефону</p>
+              <div className="mt-3 flex flex-col items-start gap-1.5">
+                {contacts.phones.map((ph) => (
+                  <a key={ph.href} href={ph.href} className="link-line text-[15px] text-ivory">
+                    {ph.label}
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -436,12 +461,23 @@ function ServiceItem({
 
 function Services() {
   const [openService, setOpenService] = useState<number | null>(null)
+
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      const i = (e as CustomEvent<number>).detail
+      setOpenService(i)
+      document.getElementById(`service-item-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    window.addEventListener(OPEN_SERVICE, onOpen)
+    return () => window.removeEventListener(OPEN_SERVICE, onOpen)
+  }, [])
+
   return (
     <section id="services" className="border-t border-line bg-ink2">
       <div className="mx-auto max-w-[1400px] px-5 py-32 md:px-[6vw] md:py-52">
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-7">
-            <SectionHead index="04" eyebrow="Услуги" title="За пределами зала" />
+            <SectionHead index="01" eyebrow="Услуги" title="Кейтеринг и мероприятия" />
           </div>
           <div className="reveal self-end md:col-span-4 md:col-start-9">
             <p className="text-[15px] leading-[1.8] text-ivory/75">
@@ -462,19 +498,15 @@ function Services() {
           ))}
         </ol>
 
-        <div className="reveal mt-20 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="eyebrow">Подробности и расчёт — по телефону</p>
-            <a href={contacts.phoneHref} className="link-line mt-4 inline-block font-serif text-4xl md:text-6xl">
-              {contacts.phone}
-            </a>
+        <div className="reveal mt-20">
+          <p className="eyebrow">Подробности и расчёт — по телефону</p>
+          <div className="mt-5 flex flex-col items-start gap-3 md:flex-row md:gap-16">
+            {contacts.phones.map((ph) => (
+              <a key={ph.href} href={ph.href} className="link-line font-serif text-4xl md:text-6xl">
+                {ph.label}
+              </a>
+            ))}
           </div>
-          <a
-            href={contacts.phoneHref}
-            className="self-start border border-ivory/40 px-8 py-4 text-[12px] uppercase tracking-[0.2em] transition-colors duration-500 hover:border-ivory hover:bg-ivory hover:text-ink md:self-auto"
-          >
-            Позвонить
-          </a>
         </div>
       </div>
     </section>
@@ -483,15 +515,19 @@ function Services() {
 
 function Contacts() {
   return (
-    <section id="contacts" className="mx-auto max-w-[1400px] px-5 pb-16 pt-32 md:px-[6vw] md:pt-52">
+    <section id="contacts" className="mx-auto max-w-[1400px] border-t border-line px-5 pb-16 pt-32 md:px-[6vw] md:pt-52">
       <SectionHead index="05" eyebrow="Бронирование и контакты" title={<>Ждём вас<br />у трассы</>} />
 
       <div className="mt-24 grid border-t border-line md:grid-cols-3">
         <div className="reveal border-b border-line py-10 md:border-b-0 md:border-r md:pr-10">
           <p className="eyebrow">Стол и заказы</p>
-          <a href={contacts.phoneHref} className="link-line mt-5 inline-block font-serif text-3xl">
-            {contacts.phone}
-          </a>
+          <div className="mt-5 flex flex-col items-start gap-1">
+            {contacts.phones.map((ph) => (
+              <a key={ph.href} href={ph.href} className="link-line font-serif text-3xl">
+                {ph.label}
+              </a>
+            ))}
+          </div>
           <p className="mt-3 text-[13px] text-stone">Бронирование, навынос, мероприятия</p>
         </div>
         <div className="reveal border-b border-line py-10 md:border-b-0 md:border-r md:px-10">
@@ -533,10 +569,10 @@ export default function App() {
       <Header />
       <main>
         <Hero />
+        <Services />
         <About />
         <Menu />
         <Grill />
-        <Services />
         <Contacts />
       </main>
     </>
