@@ -74,8 +74,8 @@ function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 md:px-[6vw]">
-        <a href="#top" onClick={() => setOpen(false)} aria-label="Моторфест — на главную">
-          <img src="./images/logo-sm.webp" alt="Моторфест" width={492} height={121} className="h-8 w-auto md:h-9" />
+        <a href="#top" onClick={() => setOpen(false)} aria-label="Моторрест — на главную">
+          <img src="./images/logo-sm.webp" alt="Моторрест" width={492} height={121} className="h-8 w-auto md:h-9" />
         </a>
         <nav className="hidden items-center gap-10 lg:flex">
           {nav.map((n) => (
@@ -131,7 +131,7 @@ function Header() {
   )
 }
 
-const OPEN_SERVICE = 'motorfest:open-service'
+const OPEN_SERVICE = 'motorrest:open-service'
 const requestOpenService = (index: number) => window.dispatchEvent(new CustomEvent(OPEN_SERVICE, { detail: index }))
 
 function Hero() {
@@ -141,7 +141,7 @@ function Hero() {
         src="./images/hall.webp"
         srcSet="./images/hall-800.webp 800w, ./images/hall.webp 1600w"
         sizes="100vw"
-        alt="Зал кафе «Моторфест» с панорамными окнами на трассу картинга"
+        alt="Зал кафе «Моторрест» с панорамными окнами на трассу картинга"
         className="graded settle absolute inset-0 h-full w-full object-cover"
         fetchPriority="high"
       />
@@ -153,7 +153,7 @@ function Hero() {
             src="./images/logo.webp"
             srcSet="./images/logo-sm.webp 492w, ./images/logo.webp 985w"
             sizes="(min-width: 768px) 640px, 86vw"
-            alt="Моторфест"
+            alt="Моторрест"
             width={985}
             height={243}
             className="-ml-[1.5%] h-auto w-[86vw] max-w-[640px] drop-shadow-[0_12px_40px_rgba(0,0,0,0.55)]"
@@ -529,7 +529,7 @@ function Contacts() {
         <SectionHead index="05" eyebrow="Бронирование и контакты" title={<>Ждём вас<br />у трассы</>} />
         <img
           src="./images/racer.webp"
-          alt="Талисман «Моторфеста» с клетчатым флагом"
+          alt="Талисман «Моторреста» с клетчатым флагом"
           width={480}
           height={493}
           loading="lazy"
@@ -573,7 +573,7 @@ function Footer() {
     <footer className="mx-auto max-w-[1400px] px-5 pb-12 md:px-[6vw]">
       <div className="flex flex-col gap-10 border-t border-line pt-10 md:flex-row md:items-start md:justify-between">
         <div>
-          <img src="./images/logo-sm.webp" alt="Моторфест" width={492} height={121} loading="lazy" className="h-9 w-auto" />
+          <img src="./images/logo-sm.webp" alt="Моторрест" width={492} height={121} loading="lazy" className="h-9 w-auto" />
           <p className="mt-4 text-[12px] text-stone">Кафе и кейтеринг у трассы Сосновоборской школы картинга</p>
         </div>
         <nav aria-label="Документы" className="flex flex-col gap-3 text-[12px] text-stone">
@@ -593,7 +593,7 @@ function Footer() {
         </div>
       </div>
       <p className="mt-10 text-[11px] leading-relaxed text-stone/70">
-        © 2026 Моторфест · {operator.name} · ИНН {operator.inn} · ОГРН {operator.ogrn}
+        © 2026 Моторрест · {operator.name} · ИНН {operator.inn} · ОГРН {operator.ogrn}
       </p>
     </footer>
   )
@@ -662,7 +662,7 @@ function LegalPage({ doc }: { doc: LegalDoc }) {
   )
 }
 
-const CONSENT_KEY = 'motorfest-cookie-consent'
+const CONSENT_KEY = 'motorrest-cookie-consent'
 
 function CookieNotice() {
   const [visible, setVisible] = useState(false)
