@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { contacts, grill, menu, services, type MenuGroup, type Service } from './data'
-import { EDITION, legalDocs, type Block, type LegalDoc } from './legal'
+import { EDITION, legalDocs, operator, type Block, type LegalDoc } from './legal'
 
 function useReveal(page: string) {
   useEffect(() => {
@@ -592,42 +592,19 @@ function Footer() {
           </a>
         </div>
       </div>
-      <p className="mt-10 text-[11px] text-stone/70">© 2026 Моторфест</p>
+      <p className="mt-10 text-[11px] leading-relaxed text-stone/70">
+        © 2026 Моторфест · {operator.name} · ИНН {operator.inn} · ОГРН {operator.ogrn}
+      </p>
     </footer>
   )
 }
 
-// подсвечиваем незаполненные реквизиты, чтобы их нельзя было пропустить
-function LegalText({ text }: { text: string }) {
-  return (
-    <>
-      {text.split(/(\[ЗАПОЛНИТЬ[^\]]*\])/).map((part, i) =>
-        part.startsWith('[ЗАПОЛНИТЬ') ? (
-          <mark key={i} className="bg-bronze/20 px-1 text-bronze">
-            {part}
-          </mark>
-        ) : (
-          part
-        ),
-      )}
-    </>
-  )
-}
-
 function LegalBlock({ block }: { block: Block }) {
-  if (typeof block === 'string') {
-    return (
-      <p>
-        <LegalText text={block} />
-      </p>
-    )
-  }
+  if (typeof block === 'string') return <p>{block}</p>
   return (
     <ul className="space-y-2 border-l border-line pl-5">
       {block.list.map((item) => (
-        <li key={item}>
-          <LegalText text={item} />
-        </li>
+        <li key={item}>{item}</li>
       ))}
     </ul>
   )
