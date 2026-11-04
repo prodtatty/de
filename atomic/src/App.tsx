@@ -75,7 +75,7 @@ function Header() {
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 md:px-[6vw]">
         <a href="#top" onClick={() => setOpen(false)} aria-label="Моторфест — на главную">
-          <img src="./images/logo-sm.webp" alt="Моторфест" width={503} height={130} className="h-8 w-auto md:h-9" />
+          <img src="./images/logo-sm.webp" alt="Моторфест" width={493} height={122} className="h-8 w-auto md:h-9" />
         </a>
         <nav className="hidden items-center gap-10 lg:flex">
           {nav.map((n) => (
@@ -151,11 +151,11 @@ function Hero() {
         <h1 className="reveal mt-6">
           <img
             src="./images/logo.webp"
-            srcSet="./images/logo-sm.webp 503w, ./images/logo.webp 1007w"
+            srcSet="./images/logo-sm.webp 493w, ./images/logo.webp 986w"
             sizes="(min-width: 768px) 760px, 92vw"
             alt="Моторфест"
-            width={1007}
-            height={261}
+            width={986}
+            height={244}
             className="-ml-[2%] h-auto w-[92vw] max-w-[760px]"
           />
         </h1>
@@ -573,7 +573,7 @@ function Footer() {
     <footer className="mx-auto max-w-[1400px] px-5 pb-12 md:px-[6vw]">
       <div className="flex flex-col gap-10 border-t border-line pt-10 md:flex-row md:items-start md:justify-between">
         <div>
-          <img src="./images/logo-sm.webp" alt="Моторфест" width={503} height={130} loading="lazy" className="h-9 w-auto" />
+          <img src="./images/logo-sm.webp" alt="Моторфест" width={493} height={122} loading="lazy" className="h-9 w-auto" />
           <p className="mt-4 text-[12px] text-stone">Кафе и кейтеринг у трассы Сосновоборской школы картинга</p>
         </div>
         <nav aria-label="Документы" className="flex flex-col gap-3 text-[12px] text-stone">
