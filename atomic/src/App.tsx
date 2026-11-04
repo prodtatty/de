@@ -148,16 +148,8 @@ function Hero() {
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-ink/30" />
       <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-14 md:px-[6vw] md:pb-20">
         <p className="reveal text-[11px] uppercase tracking-[0.22em] text-ivory/70">Сосновый Бор</p>
-        <h1 className="reveal mt-6">
-          <img
-            src="./images/logo.webp"
-            srcSet="./images/logo-sm.webp 492w, ./images/logo.webp 985w"
-            sizes="(min-width: 768px) 640px, 86vw"
-            alt="Моторрест"
-            width={985}
-            height={243}
-            className="-ml-[1.5%] h-auto w-[86vw] max-w-[640px] drop-shadow-[0_12px_40px_rgba(0,0,0,0.55)]"
-          />
+        <h1 className="reveal mt-6 whitespace-nowrap font-serif text-[min(13.5vw,170px)] font-normal uppercase leading-[0.85] tracking-[0.04em]">
+          Моторрест
         </h1>
         <div className="reveal mt-10 flex flex-col gap-8 border-t border-line pt-8 md:flex-row md:items-end md:justify-between">
           <p className="max-w-lg font-serif text-2xl italic leading-snug text-ivory/90 md:text-3xl">
