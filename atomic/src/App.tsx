@@ -554,29 +554,47 @@ function ServiceItem({
       >
         <div className="overflow-hidden">
           <div className="grid gap-12 pb-14 md:grid-cols-12 md:gap-8 md:pb-16">
-            <div className="space-y-5 md:col-span-6 md:col-start-2">
-              {service.story.map((p) => (
-                <p key={p} className="font-serif text-[21px] leading-[1.55] text-ivory/85 md:text-[23px]">
-                  {p}
-                </p>
-              ))}
-            </div>
-            <div className="md:col-span-4 md:col-start-8">
-              <p className="eyebrow">Что входит</p>
-              <ul className="mt-5 border-t border-line">
-                {service.includes.map((item) => (
-                  <li key={item} className="border-b border-line py-3.5 text-[14px] text-ivory/80">
-                    {item}
-                  </li>
+            {service.photo && (
+              <img
+                src={service.photo.src}
+                alt={service.photo.alt}
+                width={800}
+                height={1000}
+                loading="lazy"
+                className="graded-photo aspect-[4/5] w-full max-w-[420px] object-cover md:col-span-4 md:col-start-2 md:max-w-none"
+              />
+            )}
+            <div
+              className={
+                service.photo
+                  ? 'space-y-12 md:col-span-5 md:col-start-7'
+                  : 'grid gap-12 md:col-span-10 md:col-start-2 md:grid-cols-10 md:gap-8'
+              }
+            >
+              <div className={`space-y-5 ${service.photo ? '' : 'md:col-span-6'}`}>
+                {service.story.map((p) => (
+                  <p key={p} className="font-serif text-[21px] leading-[1.55] text-ivory/85 md:text-[23px]">
+                    {p}
+                  </p>
                 ))}
-              </ul>
-              <p className="eyebrow mt-8">Обсудить по телефону</p>
-              <div className="mt-3 flex flex-col items-start gap-1.5">
-                {contacts.phones.map((ph) => (
-                  <a key={ph.href} href={ph.href} className="link-line text-[15px] text-ivory">
-                    {ph.label}
-                  </a>
-                ))}
+              </div>
+              <div className={service.photo ? '' : 'md:col-span-4 md:col-start-7'}>
+                <p className="eyebrow">Что входит</p>
+                <ul className="mt-5 border-t border-line">
+                  {service.includes.map((item) => (
+                    <li key={item} className="border-b border-line py-3.5 text-[14px] text-ivory/80">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="eyebrow mt-8">Обсудить по телефону</p>
+                <div className="mt-3 flex flex-col items-start gap-1.5">
+                  {contacts.phones.map((ph) => (
+                    <a key={ph.href} href={ph.href} className="link-line text-[15px] text-ivory">
+                      {ph.label}
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

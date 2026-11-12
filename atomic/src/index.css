@@ -57,6 +57,9 @@ body {
 .graded {
   filter: saturate(0.55) contrast(1.05) brightness(0.72) sepia(0.18);
 }
+.graded-photo {
+  filter: saturate(0.85) contrast(1.03) brightness(0.95);
+}
 .graded-video {
   filter: saturate(0.78) contrast(1.04) brightness(0.92) sepia(0.08);
 }
