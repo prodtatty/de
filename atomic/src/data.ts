@@ -252,7 +252,12 @@ export const services: Service[] = [
   },
   {
     title: 'Мастер-классы',
-    photos: [{ src: './images/services/masterclass.webp', alt: 'Гости готовят на кулинарном мастер-классе' }],
+    photos: [
+      { src: './images/services/masterclass.webp', alt: 'Гости готовят на кулинарном мастер-классе' },
+      { src: './images/services/masterclass-2.webp', alt: 'Повар и гость у витрины с десертами' },
+      { src: './images/services/masterclass-3.webp', alt: 'Шоколадный десерт с ягодным соусом на тарелке' },
+      { src: './images/services/masterclass-4.webp', alt: 'Ростбиф тонкими ломтиками с соусом' },
+    ],
     short: 'Мастер-классы',
     text: 'Кулинарные мастер-классы для взрослых и детей — в зале или на выезде.',
     story: [
