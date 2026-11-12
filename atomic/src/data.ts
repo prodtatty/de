@@ -226,6 +226,7 @@ export const services: Service[] = [
   },
   {
     title: 'Кофе-брейк',
+    photos: [{ src: './images/services/coffee-break.webp', alt: 'Молочные коктейли на подносе у окна с видом на трассу' }],
     short: 'Кофе-брейки',
     text: 'Кофе, чай, выпечка и лёгкие закуски для конференций, тренингов и деловых встреч.',
     story: [
