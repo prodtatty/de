@@ -527,7 +527,7 @@ function ServiceItem({
         aria-expanded={open}
         aria-controls={id}
         onClick={onToggle}
-        className="group grid w-full grid-cols-[1fr_auto] gap-x-6 gap-y-3 py-9 text-left md:grid-cols-12 md:items-baseline md:gap-8 md:py-11"
+        className="group grid w-full grid-cols-[1fr_auto] gap-x-6 gap-y-3 py-9 text-left md:grid-cols-12 md:items-baseline md:gap-8 md:py-11 focus:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:-outline-offset-1 focus-visible:outline-ivory/30"
       >
         <span className="font-serif text-lg text-bronze md:col-span-1">{String(index + 1).padStart(2, '0')}</span>
         <span
@@ -553,7 +553,7 @@ function ServiceItem({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="grid gap-12 pb-14 md:grid-cols-12 md:gap-8 md:pb-16">
+          <div className="grid gap-12 pb-14 pt-6 md:grid-cols-12 md:gap-8 md:pb-16 md:pt-10">
             {service.photo && (
               <img
                 src={service.photo.src}
