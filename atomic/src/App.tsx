@@ -911,7 +911,8 @@ function LegalPage({ doc }: { doc: LegalDoc }) {
   )
 }
 
-const CONSENT_KEY = 'motorrest-cookie-consent'
+// v2: в уведомление добавлены персональные данные — показываем его заново всем, кто подтвердил старую версию
+const CONSENT_KEY = 'motorrest-consent-v2'
 
 function CookieNotice() {
   const [visible, setVisible] = useState(false)
@@ -940,19 +941,23 @@ function CookieNotice() {
   return (
     <div
       role="region"
-      aria-label="Уведомление о cookie"
-      className={`fixed inset-x-3 bottom-3 z-[60] flex items-center gap-4 border border-line bg-ink2/95 p-4 backdrop-blur transition-[opacity,transform] duration-700 md:inset-x-auto md:bottom-6 md:left-6 md:max-w-[440px] md:gap-6 md:p-5 ${
+      aria-label="Уведомление о cookie и персональных данных"
+      className={`fixed inset-x-3 bottom-3 z-[60] flex flex-col items-start gap-4 border border-line bg-ink2/95 p-5 backdrop-blur transition-[opacity,transform] duration-700 md:inset-x-auto md:bottom-6 md:left-6 md:max-w-[460px] ${
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'
       }`}
     >
       <p className="text-[12px] leading-[1.65] text-ivory/80 md:text-[13px]">
-        Сайт использует файлы cookie. Подробнее — в{' '}
-        <a href="#/cookies" className="underline decoration-line underline-offset-4 hover:text-ivory">
-          Политике cookie
+        Сайт использует файлы cookie и обрабатывает персональные данные в соответствии с{' '}
+        <a href="#/privacy" className="underline decoration-line underline-offset-4 hover:text-ivory">
+          Политикой конфиденциальности
+        </a>
+        ,{' '}
+        <a href="#/personal-data" className="underline decoration-line underline-offset-4 hover:text-ivory">
+          Политикой обработки персональных данных
         </a>{' '}
         и{' '}
-        <a href="#/privacy" className="underline decoration-line underline-offset-4 hover:text-ivory">
-          Политике конфиденциальности
+        <a href="#/cookies" className="underline decoration-line underline-offset-4 hover:text-ivory">
+          Политикой cookie
         </a>
         .
       </p>
