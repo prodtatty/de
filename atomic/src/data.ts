@@ -165,7 +165,8 @@ export const grill: Dish[] = [
   d('Шашлык из индейки', 650),
 ]
 
-export type Photo = { src: string; alt: string }
+// Слайд — фото; если задано video, src служит постером
+export type Photo = { src: string; alt: string; video?: { mp4: string; webm: string } }
 
 export type Service = {
   title: string
@@ -196,7 +197,14 @@ export const services: Service[] = [
   },
   {
     title: 'Банкетное меню',
-    photos: [{ src: './images/services/banquet.webp', alt: 'Банкетный стол: красная сервировка, золотые приборы, сырная тарелка и цветы' }],
+    photos: [
+      {
+        src: './videos/banquet-poster.webp',
+        alt: 'Видео: банкетные столы с закусками, шпажками и десертами у трассы',
+        video: { mp4: './videos/banquet.mp4', webm: './videos/banquet.webm' },
+      },
+      { src: './images/services/banquet.webp', alt: 'Банкетный стол: красная сервировка, золотые приборы, сырная тарелка и цветы' },
+    ],
     short: 'Банкеты',
     text: 'Свадьбы, юбилеи, семейные даты. Подача к столу, зал у трассы или ваша площадка.',
     story: [

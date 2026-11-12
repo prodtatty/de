@@ -145,9 +145,9 @@ function Header() {
 const OPEN_SERVICE = 'motorrest:open-service'
 const requestOpenService = (index: number) => window.dispatchEvent(new CustomEvent(OPEN_SERVICE, { detail: index }))
 
-// Экскурсия по залу (вертикальное видео 9:16). Без звука и по кругу, звук — по кнопке;
-// вне экрана ставится на паузу, при «уменьшить движение» не запускается сама.
-function useTourVideo() {
+// Видео без звука и по кругу, звук — по кнопке; играет, только пока видно на экране
+// (threshold — какая доля кадра должна быть видна), при «уменьшить движение» не запускается само.
+function useAutoplayVideo(threshold = 0) {
   const ref = useRef<HTMLVideoElement>(null)
   const [muted, setMuted] = useState(true)
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
@@ -157,13 +157,16 @@ function useTourVideo() {
     if (!v) return
     v.muted = true
     if (reducedMotion) return
-    const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) v.play().catch(() => {})
-      else v.pause()
-    })
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) v.play().catch(() => {})
+        else v.pause()
+      },
+      { threshold },
+    )
     io.observe(v)
     return () => io.disconnect()
-  }, [reducedMotion])
+  }, [reducedMotion, threshold])
 
   const toggleSound = () => {
     const v = ref.current
@@ -205,7 +208,7 @@ function SoundButton({ muted, onClick, className = '' }: { muted: boolean; onCli
 }
 
 function TourCard() {
-  const { ref, muted, toggleSound } = useTourVideo()
+  const { ref, muted, toggleSound } = useAutoplayVideo()
   return (
     <figure className="reveal shrink-0">
       <div className="relative aspect-[9/16] h-[clamp(320px,calc(100svh-450px),500px)] overflow-hidden border border-ivory/15 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.9)]">
@@ -230,7 +233,7 @@ function TourCard() {
 }
 
 function HeroBackgroundVideo() {
-  const { ref, muted, toggleSound } = useTourVideo()
+  const { ref, muted, toggleSound } = useAutoplayVideo()
   return (
     <>
       <video
@@ -508,7 +511,31 @@ function Grill() {
   )
 }
 
-// Лента фото 4:5 на нативной прокрутке со snap: на телефоне — свайп, на компьютере — стрелки
+function VideoSlide({ item }: { item: Photo }) {
+  // половина кадра на экране: соседние слайды в карусели не играют
+  const { ref, muted, toggleSound } = useAutoplayVideo(0.5)
+  return (
+    <div className="relative h-full w-full shrink-0 snap-center">
+      <video
+        ref={ref}
+        poster={item.src}
+        muted
+        loop
+        playsInline
+        preload="none"
+        aria-label={item.alt}
+        className="graded-photo h-full w-full object-cover"
+      >
+        <source src={item.video!.mp4} type="video/mp4" />
+        <source src={item.video!.webm} type="video/webm" />
+      </video>
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink/80 to-transparent" />
+      <SoundButton muted={muted} onClick={toggleSound} className="absolute bottom-4 left-4" />
+    </div>
+  )
+}
+
+// Лента фото и видео 4:5 на нативной прокрутке со snap: на телефоне — свайп, на компьютере — стрелки
 function PhotoCarousel({ photos, label }: { photos: Photo[]; label: string }) {
   const track = useRef<HTMLDivElement>(null)
   const [index, setIndex] = useState(0)
@@ -541,17 +568,21 @@ function PhotoCarousel({ photos, label }: { photos: Photo[]; label: string }) {
         }}
         className="no-scrollbar flex aspect-[4/5] snap-x snap-mandatory overflow-x-auto overscroll-x-contain focus:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-ivory/30"
       >
-        {photos.map((ph) => (
-          <img
-            key={ph.src}
-            src={ph.src}
-            alt={ph.alt}
-            width={800}
-            height={1000}
-            loading="lazy"
-            className="graded-photo h-full w-full shrink-0 snap-center object-cover"
-          />
-        ))}
+        {photos.map((ph) =>
+          ph.video ? (
+            <VideoSlide key={ph.src} item={ph} />
+          ) : (
+            <img
+              key={ph.src}
+              src={ph.src}
+              alt={ph.alt}
+              width={800}
+              height={1000}
+              loading="lazy"
+              className="graded-photo h-full w-full shrink-0 snap-center object-cover"
+            />
+          ),
+        )}
       </div>
       <div className="mt-4 flex items-center justify-between">
         <span className="text-[11px] tabular-nums tracking-[0.22em] text-stone" aria-live="polite">
