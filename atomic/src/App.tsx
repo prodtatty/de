@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { contacts, grill, menu, services, type MenuGroup, type Service } from './data'
+import { contacts, grill, menu, services, type MenuGroup, type Photo, type Service } from './data'
 import { EDITION, legalDocs, operator, type Block, type LegalDoc } from './legal'
 
 function useReveal(page: string) {
@@ -508,6 +508,78 @@ function Grill() {
   )
 }
 
+// Лента фото 4:5 на нативной прокрутке со snap: на телефоне — свайп, на компьютере — стрелки
+function PhotoCarousel({ photos, label }: { photos: Photo[]; label: string }) {
+  const track = useRef<HTMLDivElement>(null)
+  const [index, setIndex] = useState(0)
+
+  const onScroll = () => {
+    const el = track.current
+    if (el) setIndex(Math.round(el.scrollLeft / el.clientWidth))
+  }
+
+  const go = (to: number) => {
+    const el = track.current
+    if (!el) return
+    const i = (to + photos.length) % photos.length
+    el.scrollTo({ left: i * el.clientWidth, behavior: 'smooth' })
+  }
+
+  const pad = (n: number) => String(n).padStart(2, '0')
+
+  return (
+    <div role="group" aria-roledescription="карусель" aria-label={`Фото: ${label}`}>
+      <div
+        ref={track}
+        onScroll={onScroll}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
+          if (!step) return
+          e.preventDefault()
+          go(index + step)
+        }}
+        className="no-scrollbar flex aspect-[4/5] snap-x snap-mandatory overflow-x-auto overscroll-x-contain focus:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-ivory/30"
+      >
+        {photos.map((ph) => (
+          <img
+            key={ph.src}
+            src={ph.src}
+            alt={ph.alt}
+            width={800}
+            height={1000}
+            loading="lazy"
+            className="graded-photo h-full w-full shrink-0 snap-center object-cover"
+          />
+        ))}
+      </div>
+      <div className="mt-4 flex items-center justify-between">
+        <span className="text-[11px] tabular-nums tracking-[0.22em] text-stone" aria-live="polite">
+          <span className="text-ivory">{pad(index + 1)}</span> / {pad(photos.length)}
+        </span>
+        <div className="flex gap-2">
+          {[
+            { dir: -1, label: 'Предыдущее фото', path: 'M15 5l-7 7 7 7' },
+            { dir: 1, label: 'Следующее фото', path: 'M9 5l7 7-7 7' },
+          ].map((b) => (
+            <button
+              key={b.dir}
+              type="button"
+              onClick={() => go(index + b.dir)}
+              aria-label={b.label}
+              className="flex h-10 w-10 items-center justify-center border border-ivory/25 text-ivory/80 transition-colors duration-500 hover:border-ivory hover:bg-ivory hover:text-ink"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden>
+                <path d={b.path} />
+              </svg>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ServiceItem({
   service,
   index,
@@ -554,31 +626,37 @@ function ServiceItem({
       >
         <div className="overflow-hidden">
           <div className="grid gap-12 pb-14 pt-6 md:grid-cols-12 md:gap-8 md:pb-16 md:pt-10">
-            {service.photo && (
-              <img
-                src={service.photo.src}
-                alt={service.photo.alt}
-                width={800}
-                height={1000}
-                loading="lazy"
-                className="graded-photo mt-6 aspect-[4/5] w-full max-w-[420px] object-cover md:col-span-4 md:col-start-2 md:mt-20 md:max-w-none"
-              />
+            {service.photos && (
+              <div className="mt-6 w-full max-w-[420px] md:col-span-4 md:col-start-2 md:mt-20 md:max-w-none">
+                {service.photos.length > 1 ? (
+                  <PhotoCarousel photos={service.photos} label={service.title} />
+                ) : (
+                  <img
+                    src={service.photos[0].src}
+                    alt={service.photos[0].alt}
+                    width={800}
+                    height={1000}
+                    loading="lazy"
+                    className="graded-photo aspect-[4/5] w-full object-cover"
+                  />
+                )}
+              </div>
             )}
             <div
               className={
-                service.photo
+                service.photos
                   ? 'space-y-12 md:col-span-5 md:col-start-7'
                   : 'grid gap-12 md:col-span-10 md:col-start-2 md:grid-cols-10 md:gap-8'
               }
             >
-              <div className={`space-y-5 ${service.photo ? '' : 'md:col-span-6'}`}>
+              <div className={`space-y-5 ${service.photos ? '' : 'md:col-span-6'}`}>
                 {service.story.map((p) => (
                   <p key={p} className="font-serif text-[21px] leading-[1.55] text-ivory/85 md:text-[23px]">
                     {p}
                   </p>
                 ))}
               </div>
-              <div className={service.photo ? '' : 'md:col-span-4 md:col-start-7'}>
+              <div className={service.photos ? '' : 'md:col-span-4 md:col-start-7'}>
                 <p className="eyebrow">Что входит</p>
                 <ul className="mt-5 border-t border-line">
                   {service.includes.map((item) => (

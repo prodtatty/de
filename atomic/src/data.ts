@@ -165,19 +165,27 @@ export const grill: Dish[] = [
   d('Шашлык из индейки', 650),
 ]
 
+export type Photo = { src: string; alt: string }
+
 export type Service = {
   title: string
   short: string
   text: string
   story: string[]
   includes: string[]
-  photo?: { src: string; alt: string }
+  photos?: Photo[]
 }
 
 export const services: Service[] = [
   {
     title: 'Кейтеринг и выездное обслуживание',
-    photo: { src: './images/services/catering.webp', alt: 'Креветки в тесте катаифи с соусом — подача на выездном мероприятии' },
+    photos: [
+      { src: './images/services/catering.webp', alt: 'Креветки в тесте катаифи с соусом — подача на выездном мероприятии' },
+      { src: './images/services/catering-2.webp', alt: 'Шпажки капрезе: моцарелла, черри и пипетки с бальзамиком' },
+      { src: './images/services/catering-3.webp', alt: 'Круассаны с шоколадом, кокосовой стружкой и сублимированной малиной' },
+      { src: './images/services/catering-4.webp', alt: 'Рулетики с сырной начинкой и микрозеленью на шпажках' },
+      { src: './images/services/catering-5.webp', alt: 'Мини-круассаны с языком, салатом и огурцом' },
+    ],
     short: 'Кейтеринг',
     text: 'Привозим кухню, бар и команду на вашу площадку — за городом, в офисе, на природе.',
     story: [
@@ -188,7 +196,7 @@ export const services: Service[] = [
   },
   {
     title: 'Банкетное меню',
-    photo: { src: './images/services/banquet.webp', alt: 'Банкетный стол: красная сервировка, золотые приборы, сырная тарелка и цветы' },
+    photos: [{ src: './images/services/banquet.webp', alt: 'Банкетный стол: красная сервировка, золотые приборы, сырная тарелка и цветы' }],
     short: 'Банкеты',
     text: 'Свадьбы, юбилеи, семейные даты. Подача к столу, зал у трассы или ваша площадка.',
     story: [
@@ -199,7 +207,7 @@ export const services: Service[] = [
   },
   {
     title: 'Фуршетное меню',
-    photo: { src: './images/services/buffet.webp', alt: 'Фуршетный стол с закусками, нарезками, фруктами и морсами' },
+    photos: [{ src: './images/services/buffet.webp', alt: 'Фуршетный стол с закусками, нарезками, фруктами и морсами' }],
     short: 'Фуршеты',
     text: 'Канапе, закуски, горячее на шпажках и десерты — для приёмов, где гости в движении.',
     story: [
@@ -220,7 +228,7 @@ export const services: Service[] = [
   },
   {
     title: 'Детские праздники',
-    photo: { src: './images/services/kids.webp', alt: 'Праздничный стол с канапе и шарами на детском дне рождения' },
+    photos: [{ src: './images/services/kids.webp', alt: 'Праздничный стол с канапе и шарами на детском дне рождения' }],
     short: 'Детские праздники',
     text: 'Детское меню, торт и праздничный стол. Трасса — в нескольких шагах.',
     story: [
@@ -231,7 +239,7 @@ export const services: Service[] = [
   },
   {
     title: 'Мастер-классы',
-    photo: { src: './images/services/masterclass.webp', alt: 'Гости готовят на кулинарном мастер-классе' },
+    photos: [{ src: './images/services/masterclass.webp', alt: 'Гости готовят на кулинарном мастер-классе' }],
     short: 'Мастер-классы',
     text: 'Кулинарные мастер-классы для взрослых и детей — в зале или на выезде.',
     story: [

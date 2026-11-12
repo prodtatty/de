@@ -57,6 +57,13 @@ body {
 .graded {
   filter: saturate(0.55) contrast(1.05) brightness(0.72) sepia(0.18);
 }
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .graded-photo {
   filter: saturate(0.85) contrast(1.03) brightness(0.95);
 }
