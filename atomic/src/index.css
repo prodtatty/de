@@ -53,9 +53,15 @@ body {
   animation: settle 2.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Тонировка фото под палитру сайта */
+/* Тонировка фото и видео под палитру сайта */
 .graded {
   filter: saturate(0.55) contrast(1.05) brightness(0.72) sepia(0.18);
+}
+.graded-video {
+  filter: saturate(0.78) contrast(1.04) brightness(0.92) sepia(0.08);
+}
+.graded-video-bg {
+  filter: saturate(0.6) contrast(1.05) brightness(0.75) sepia(0.15);
 }
 
 .grain::after {

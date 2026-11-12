@@ -44,6 +44,17 @@ function useParallax<T extends HTMLElement>(strength = 0.08) {
   return ref
 }
 
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches)
+  useEffect(() => {
+    const mq = window.matchMedia(query)
+    const onChange = () => setMatches(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [query])
+  return matches
+}
+
 const nav = [
   { href: '#services', label: 'Услуги' },
   { href: '#menu', label: 'Меню' },
@@ -134,23 +145,138 @@ function Header() {
 const OPEN_SERVICE = 'motorrest:open-service'
 const requestOpenService = (index: number) => window.dispatchEvent(new CustomEvent(OPEN_SERVICE, { detail: index }))
 
-function Hero() {
+// Экскурсия по залу (вертикальное видео 9:16). Без звука и по кругу, звук — по кнопке;
+// вне экрана ставится на паузу, при «уменьшить движение» не запускается сама.
+function useTourVideo() {
+  const ref = useRef<HTMLVideoElement>(null)
+  const [muted, setMuted] = useState(true)
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
+
+  useEffect(() => {
+    const v = ref.current
+    if (!v) return
+    v.muted = true
+    if (reducedMotion) return
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) v.play().catch(() => {})
+      else v.pause()
+    })
+    io.observe(v)
+    return () => io.disconnect()
+  }, [reducedMotion])
+
+  const toggleSound = () => {
+    const v = ref.current
+    if (!v) return
+    v.muted = !v.muted
+    setMuted(v.muted)
+    if (v.paused) v.play().catch(() => {})
+  }
+
+  return { ref, muted, toggleSound }
+}
+
+const TOUR_POSTER = './videos/tour-poster.webp'
+
+// H.264 для Safari и большинства браузеров, VP9 — запасной вариант для сборок без H.264
+const tourSources = (
+  <>
+    <source src="./videos/tour.mp4" type="video/mp4" />
+    <source src="./videos/tour.webm" type="video/webm" />
+  </>
+)
+
+function SoundButton({ muted, onClick, className = '' }: { muted: boolean; onClick: () => void; className?: string }) {
   return (
-    <section id="top" className="grain relative flex h-[100svh] min-h-[600px] items-end overflow-hidden">
-      <img
-        src="./images/hall.webp"
-        srcSet="./images/hall-800.webp 800w, ./images/hall.webp 1600w"
-        sizes="100vw"
-        alt="Зал кафе «Моторрест» с панорамными окнами на трассу картинга"
-        className="graded settle absolute inset-0 h-full w-full object-cover"
-        fetchPriority="high"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-ink/30" />
-      <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-14 md:px-[6vw] md:pb-20">
-        <p className="reveal text-[11px] uppercase tracking-[0.22em] text-ivory/70">Сосновый Бор</p>
-        <h1 className="reveal mt-4 whitespace-nowrap font-serif text-[min(17.5vw,190px)] font-normal italic leading-[1.05] -tracking-[0.005em]">
-          Моторрест
-        </h1>
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={!muted}
+      className={`flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-ivory/85 transition-colors hover:text-ivory ${className}`}
+    >
+      <span aria-hidden className="flex h-3 items-end gap-[2px]">
+        {[5, 9, 6, 11].map((h, i) => (
+          <span key={i} className={`w-px bg-current transition-all duration-500 ${muted ? 'h-[3px]' : ''}`} style={muted ? undefined : { height: h }} />
+        ))}
+      </span>
+      {muted ? 'Включить звук' : 'Выключить звук'}
+    </button>
+  )
+}
+
+function TourCard() {
+  const { ref, muted, toggleSound } = useTourVideo()
+  return (
+    <figure className="reveal shrink-0">
+      <div className="relative aspect-[9/16] h-[clamp(320px,calc(100svh-450px),500px)] overflow-hidden border border-ivory/15 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.9)]">
+        <video
+          ref={ref}
+          poster={TOUR_POSTER}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-label="Видеоэкскурсия по «Моторресту»: зал, симулятор, детская комната"
+          className="graded-video h-full w-full object-cover"
+        >
+          {tourSources}
+        </video>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink/80 to-transparent" />
+        <SoundButton muted={muted} onClick={toggleSound} className="absolute bottom-4 left-4" />
+      </div>
+      <figcaption className="mt-4 text-[10px] uppercase tracking-[0.22em] text-ivory/60">Экскурсия по залу · 0:18</figcaption>
+    </figure>
+  )
+}
+
+function HeroBackgroundVideo() {
+  const { ref, muted, toggleSound } = useTourVideo()
+  return (
+    <>
+      <video
+        ref={ref}
+        poster={TOUR_POSTER}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-label="Видеоэкскурсия по «Моторресту»"
+        className="graded-video-bg absolute inset-0 h-full w-full object-cover"
+      >
+        {tourSources}
+      </video>
+      <SoundButton muted={muted} onClick={toggleSound} className="absolute right-5 top-24 z-10 md:right-[6vw]" />
+    </>
+  )
+}
+
+function Hero() {
+  const wide = useMediaQuery('(min-width: 1024px)')
+  return (
+    <section id="top" className="grain relative flex min-h-[100svh] items-end overflow-hidden">
+      {wide ? (
+        <img
+          src="./images/hall.webp"
+          srcSet="./images/hall-800.webp 800w, ./images/hall.webp 1600w"
+          sizes="100vw"
+          alt="Зал кафе «Моторрест» с панорамными окнами на трассу картинга"
+          className="graded settle absolute inset-0 h-full w-full object-cover"
+          fetchPriority="high"
+        />
+      ) : (
+        <HeroBackgroundVideo />
+      )}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-ink/40 lg:via-ink/40 lg:to-ink/30" />
+      <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-14 pt-32 md:px-[6vw] md:pb-20">
+        <div className="lg:flex lg:items-end lg:justify-between lg:gap-12">
+          <div>
+            <p className="reveal text-[11px] uppercase tracking-[0.22em] text-ivory/70">Сосновый Бор</p>
+            <h1 className="reveal mt-4 whitespace-nowrap font-serif text-[min(17.5vw,190px)] font-normal italic leading-[1.05] -tracking-[0.005em] lg:text-[min(12vw,190px)]">
+              Моторрест
+            </h1>
+          </div>
+          {wide && <TourCard />}
+        </div>
         <div className="reveal mt-10 flex flex-col gap-8 border-t border-line pt-8 md:flex-row md:items-end md:justify-between">
           <p className="max-w-lg font-serif text-2xl italic leading-snug text-ivory/90 md:text-3xl">
             Кейтеринг, банкеты и кухня у старт-финишной прямой
