@@ -165,8 +165,8 @@ export const grill: Dish[] = [
   d('Шашлык из индейки', 650),
 ]
 
-// Слайд — фото; если задано video, src служит постером
-export type Photo = { src: string; alt: string; video?: { mp4: string; webm: string } }
+// Слайд — фото; если задано video, src служит постером (silent — в ролике нет звуковой дорожки)
+export type Photo = { src: string; alt: string; video?: { mp4: string; webm: string; silent?: boolean } }
 
 export type Service = {
   title: string
@@ -181,6 +181,11 @@ export const services: Service[] = [
   {
     title: 'Кейтеринг и выездное обслуживание',
     photos: [
+      {
+        src: './videos/catering-poster.webp',
+        alt: 'Видео: боксы с закусками, хамоном, моцареллой и креветками для выездного мероприятия',
+        video: { mp4: './videos/catering.mp4', webm: './videos/catering.webm', silent: true },
+      },
       { src: './images/services/catering.webp', alt: 'Креветки в тесте катаифи с соусом — подача на выездном мероприятии' },
       { src: './images/services/catering-2.webp', alt: 'Шпажки капрезе: моцарелла, черри и пипетки с бальзамиком' },
       { src: './images/services/catering-3.webp', alt: 'Круассаны с шоколадом, кокосовой стружкой и сублимированной малиной' },
@@ -215,7 +220,14 @@ export const services: Service[] = [
   },
   {
     title: 'Фуршетное меню',
-    photos: [{ src: './images/services/buffet.webp', alt: 'Фуршетный стол с закусками, нарезками, фруктами и морсами' }],
+    photos: [
+      {
+        src: './videos/buffet-poster.webp',
+        alt: 'Видео: сервировка и закуски на праздничном столе',
+        video: { mp4: './videos/buffet.mp4', webm: './videos/buffet.webm' },
+      },
+      { src: './images/services/buffet.webp', alt: 'Фуршетный стол с закусками, нарезками, фруктами и морсами' },
+    ],
     short: 'Фуршеты',
     text: 'Канапе, закуски, горячее на шпажках и десерты — для приёмов, где гости в движении.',
     story: [
@@ -253,8 +265,8 @@ export const services: Service[] = [
   {
     title: 'Мастер-классы',
     photos: [
-      { src: './images/services/masterclass.webp', alt: 'Гости готовят на кулинарном мастер-классе' },
       { src: './images/services/masterclass-2.webp', alt: 'Повар и гость у витрины с десертами' },
+      { src: './images/services/masterclass.webp', alt: 'Гости готовят на кулинарном мастер-классе' },
       { src: './images/services/masterclass-3.webp', alt: 'Шоколадный десерт с ягодным соусом на тарелке' },
       { src: './images/services/masterclass-4.webp', alt: 'Ростбиф тонкими ломтиками с соусом' },
     ],

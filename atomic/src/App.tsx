@@ -529,8 +529,12 @@ function VideoSlide({ item }: { item: Photo }) {
         <source src={item.video!.mp4} type="video/mp4" />
         <source src={item.video!.webm} type="video/webm" />
       </video>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink/80 to-transparent" />
-      <SoundButton muted={muted} onClick={toggleSound} className="absolute bottom-4 left-4" />
+      {!item.video!.silent && (
+        <>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink/80 to-transparent" />
+          <SoundButton muted={muted} onClick={toggleSound} className="absolute bottom-4 left-4" />
+        </>
+      )}
     </div>
   )
 }

@@ -12,6 +12,30 @@ body {
   overflow-x: hidden;
 }
 
+/* Полоса прокрутки страницы в палитре сайта: тонкая бронза на тёмном */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(168, 139, 94, 0.55) #0e0d0b;
+}
+/* Safari и браузеры без scrollbar-color */
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0e0d0b;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(168, 139, 94, 0.5);
+    border: 2px solid #0e0d0b;
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(168, 139, 94, 0.8);
+  }
+}
+
 ::selection {
   background: #a88b5e;
   color: #0e0d0b;
