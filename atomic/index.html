@@ -2,6 +2,13 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
+    <!-- Защита: сайт может загружать только собственные файлы — никаких чужих скриптов, рамок и форм.
+         На хостинге те же правила дублируются заголовками из .htaccess (плюс запрет встраивать сайт в чужие страницы). -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Моторрест — кейтеринг, банкеты и кафе у картинга, Сосновый Бор</title>
     <meta name="description" content="Моторрест, Сосновый Бор: кейтеринг и выездное обслуживание, банкеты, фуршеты, кофе-брейки, детские праздники, мастер-классы. Кафе с домашней кухней и мангалом у трассы картинга." />
@@ -9,8 +16,20 @@
     <meta property="og:title" content="Моторрест — кейтеринг, банкеты и кафе у картинга" />
     <meta property="og:description" content="Сосновый Бор, Ракопежское шоссе, 32/а. Ежедневно 10:00–20:00." />
     <meta property="og:image" content="./images/hall.webp" />
-    <link rel="preload" as="image" href="./images/hall.webp" media="(min-width: 1024px)" />
-    <link rel="preload" as="image" href="./videos/tour-poster.webp" media="(max-width: 1023px)" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="icon" href="./favicon.ico" sizes="48x48" />
+    <link rel="icon" href="./favicon-96.png" type="image/png" sizes="96x96" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./site.webmanifest" />
+    <link
+      rel="preload"
+      as="image"
+      href="./images/hall.webp"
+      imagesrcset="./images/hall-800.webp 800w, ./images/hall.webp 1600w"
+      imagesizes="100vw"
+      media="(min-width: 1024px)"
+    />
+    <link rel="preload" as="image" href="./videos/tour-m-poster.webp" media="(max-width: 1023px)" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",

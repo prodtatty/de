@@ -45,7 +45,7 @@ function useParallax<T extends HTMLElement>(strength = 0.08) {
 }
 
 function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(() => window.matchMedia(query).matches)
+  const [matches, setMatches] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches)
   useEffect(() => {
     const mq = window.matchMedia(query)
     const onChange = () => setMatches(mq.matches)
@@ -86,7 +86,15 @@ function Header() {
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 md:px-[6vw]">
         <a href="#top" onClick={() => setOpen(false)} aria-label="Моторрест — на главную">
-          <img src="./images/logo-sm.webp" alt="Моторрест" width={492} height={121} className="h-8 w-auto md:h-9" />
+          <img
+            src="./images/logo-sm.webp"
+            srcSet="./images/logo-xs.webp 300w, ./images/logo-sm.webp 492w"
+            sizes="146px"
+            alt="Моторрест"
+            width={492}
+            height={121}
+            className="h-8 w-auto md:h-9"
+          />
         </a>
         <nav className="hidden items-center gap-10 lg:flex">
           {nav.map((n) => (
@@ -101,15 +109,26 @@ function Header() {
             Забронировать
           </a>
         </nav>
-        <button
-          className="flex h-10 w-10 flex-col items-end justify-center gap-[7px] lg:hidden"
-          aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span className={`block h-px w-7 bg-ivory transition-transform duration-500 ${open ? 'translate-y-[4px] rotate-45' : ''}`} />
-          <span className={`block h-px bg-ivory transition-all duration-500 ${open ? 'w-7 -translate-y-[4px] -rotate-45' : 'w-5'}`} />
-        </button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <a
+            href={contacts.phones[0].href}
+            aria-label={`Позвонить: ${contacts.phones[0].label}`}
+            className="flex h-11 w-11 items-center justify-center text-ivory/85 transition-colors hover:text-ivory"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden>
+              <path d="M5 3.5h3.2l1.6 4.3-2.2 1.5a11.5 11.5 0 0 0 7.1 7.1l1.5-2.2 4.3 1.6V19a1.5 1.5 0 0 1-1.6 1.5C10.5 20 4 13.5 3.5 5.1A1.5 1.5 0 0 1 5 3.5z" />
+            </svg>
+          </a>
+          <button
+            className="flex h-11 w-11 flex-col items-end justify-center gap-[7px]"
+            aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span className={`block h-px w-7 bg-ivory transition-transform duration-500 ${open ? 'translate-y-[4px] rotate-45' : ''}`} />
+            <span className={`block h-px bg-ivory transition-all duration-500 ${open ? 'w-7 -translate-y-[4px] -rotate-45' : 'w-5'}`} />
+          </button>
+        </div>
       </div>
 
       <div
@@ -145,27 +164,60 @@ function Header() {
 const OPEN_SERVICE = 'motorrest:open-service'
 const requestOpenService = (index: number) => window.dispatchEvent(new CustomEvent(OPEN_SERVICE, { detail: index }))
 
+// Медленная связь или включённая экономия трафика — видео сами не запускаем, остаётся обложка
+function prefersLightMedia() {
+  const c = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection
+  return !!c && (c.saveData === true || c.effectiveType === 'slow-2g' || c.effectiveType === '2g')
+}
+
+// Ждём полной загрузки страницы: видео не отнимает канал и процессор у первого экрана
+function afterPageLoad(cb: () => void) {
+  let timer = 0
+  const run = () => {
+    timer = window.setTimeout(cb, 300)
+  }
+  if (document.readyState === 'complete') run()
+  else window.addEventListener('load', run, { once: true })
+  return () => {
+    window.removeEventListener('load', run)
+    window.clearTimeout(timer)
+  }
+}
+
 // Видео без звука и по кругу, звук — по кнопке; играет, только пока видно на экране
-// (threshold — какая доля кадра должна быть видна), при «уменьшить движение» не запускается само.
+// (threshold — какая доля кадра должна быть видна), при «уменьшить движение» и экономии трафика само не запускается.
 function useAutoplayVideo(threshold = 0) {
   const ref = useRef<HTMLVideoElement>(null)
   const [muted, setMuted] = useState(true)
+  // видео хоть раз начало играть — можно проявлять его поверх обложки
+  const [started, setStarted] = useState(false)
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
 
   useEffect(() => {
     const v = ref.current
     if (!v) return
     v.muted = true
-    if (reducedMotion) return
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) v.play().catch(() => {})
-        else v.pause()
-      },
-      { threshold },
-    )
-    io.observe(v)
-    return () => io.disconnect()
+    const onPlay = () => setStarted(true)
+    v.addEventListener('playing', onPlay)
+    let io: IntersectionObserver | undefined
+    const cancel =
+      reducedMotion || prefersLightMedia()
+        ? undefined
+        : afterPageLoad(() => {
+            io = new IntersectionObserver(
+              ([e]) => {
+                if (e.isIntersecting) v.play().catch(() => {})
+                else v.pause()
+              },
+              { threshold },
+            )
+            io.observe(v)
+          })
+    return () => {
+      cancel?.()
+      io?.disconnect()
+      v.removeEventListener('playing', onPlay)
+    }
   }, [reducedMotion, threshold])
 
   const toggleSound = () => {
@@ -176,7 +228,14 @@ function useAutoplayVideo(threshold = 0) {
     if (v.paused) v.play().catch(() => {})
   }
 
-  return { ref, muted, toggleSound }
+  const togglePlay = () => {
+    const v = ref.current
+    if (!v) return
+    if (v.paused) v.play().catch(() => {})
+    else v.pause()
+  }
+
+  return { ref, muted, started, toggleSound, togglePlay }
 }
 
 const TOUR_POSTER = './videos/tour-poster.webp'
@@ -208,19 +267,23 @@ function SoundButton({ muted, onClick, className = '' }: { muted: boolean; onCli
 }
 
 function TourCard() {
-  const { ref, muted, toggleSound } = useAutoplayVideo()
+  const { ref, muted, started, toggleSound, togglePlay } = useAutoplayVideo()
   return (
-    <figure className="reveal shrink-0">
+    <figure className="rise rise-3 shrink-0">
       <div className="relative aspect-[9/16] h-[clamp(320px,calc(100svh-450px),500px)] overflow-hidden border border-ivory/15 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.9)]">
+        {/* обложка отдельной «ленивой» картинкой: на телефоне карточка скрыта, и обложка не скачивается */}
+        <img src={TOUR_POSTER} alt="" width={720} height={1280} loading="lazy" className="graded-video absolute inset-0 h-full w-full object-cover" />
         <video
           ref={ref}
-          poster={TOUR_POSTER}
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="none"
+          onClick={togglePlay}
           aria-label="Видеоэкскурсия по «Моторресту»: зал, симулятор, детская комната"
-          className="graded-video h-full w-full object-cover"
+          className={`graded-video relative h-full w-full object-cover transition-opacity duration-700 ${
+            started ? 'opacity-100' : 'opacity-0'
+          }`}
         >
           {tourSources}
         </video>
@@ -232,55 +295,65 @@ function TourCard() {
   )
 }
 
+// Телефон и планшет: под видео лежит его первый кадр (картинка в <picture> у Hero),
+// само видео — облегчённая версия 540×960 — проявляется, когда начинает играть
 function HeroBackgroundVideo() {
-  const { ref, muted, toggleSound } = useAutoplayVideo()
+  const { ref, muted, started, toggleSound } = useAutoplayVideo()
   return (
-    <>
+    <div className="lg:hidden">
       <video
         ref={ref}
-        poster={TOUR_POSTER}
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="none"
         aria-label="Видеоэкскурсия по «Моторресту»"
-        className="graded-video-bg absolute inset-0 h-full w-full object-cover"
+        className={`graded-video-bg absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+          started ? 'opacity-100' : 'opacity-0'
+        }`}
       >
-        {tourSources}
+        <source src="./videos/tour-m.mp4" type="video/mp4" />
+        <source src="./videos/tour-m.webm" type="video/webm" />
       </video>
       <SoundButton muted={muted} onClick={toggleSound} className="absolute right-5 top-24 z-10 md:right-[6vw]" />
-    </>
+    </div>
   )
 }
 
 function Hero() {
-  const wide = useMediaQuery('(min-width: 1024px)')
   return (
     <section id="top" className="grain relative flex min-h-[100svh] items-end overflow-hidden">
-      {wide ? (
-        <img
-          src="./images/hall.webp"
+      {/* Компьютер — фото зала; телефон — первый кадр видео, сразу, без ожидания самого ролика */}
+      <picture>
+        <source
+          media="(min-width: 1024px)"
           srcSet="./images/hall-800.webp 800w, ./images/hall.webp 1600w"
           sizes="100vw"
-          alt="Зал кафе «Моторрест» с панорамными окнами на трассу картинга"
-          className="graded settle absolute inset-0 h-full w-full object-cover"
-          fetchPriority="high"
         />
-      ) : (
-        <HeroBackgroundVideo />
-      )}
+        <img
+          src="./videos/tour-m-poster.webp"
+          alt="Зал кафе «Моторрест» с панорамными окнами на трассу картинга"
+          width={540}
+          height={960}
+          {...{ fetchpriority: 'high' } /* React 18 не знает fetchPriority — пишем атрибут как есть */}
+          className="hero-bg absolute inset-0 h-full w-full object-cover"
+        />
+      </picture>
+      <HeroBackgroundVideo />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-ink/40 lg:via-ink/40 lg:to-ink/30" />
       <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-14 pt-32 md:px-[6vw] md:pb-20">
         <div className="lg:flex lg:items-end lg:justify-between lg:gap-12">
           <div>
-            <p className="reveal text-[11px] uppercase tracking-[0.22em] text-ivory/70">Сосновый Бор</p>
-            <h1 className="reveal mt-4 whitespace-nowrap font-serif text-[min(17.5vw,190px)] font-normal italic leading-[1.05] -tracking-[0.005em] lg:text-[min(12vw,190px)]">
+            <p className="rise text-[11px] uppercase tracking-[0.22em] text-ivory/70">Сосновый Бор</p>
+            <h1 className="rise rise-1 mt-4 whitespace-nowrap font-serif text-[min(17.5vw,190px)] font-normal italic leading-[1.05] -tracking-[0.005em] lg:text-[min(12vw,190px)]">
               Моторрест
             </h1>
           </div>
-          {wide && <TourCard />}
+          <div className="hidden lg:block">
+            <TourCard />
+          </div>
         </div>
-        <div className="reveal mt-10 flex flex-col gap-8 border-t border-line pt-8 md:flex-row md:items-end md:justify-between">
+        <div className="rise rise-2 mt-10 flex flex-col gap-8 border-t border-line pt-8 md:flex-row md:items-end md:justify-between">
           <p className="max-w-lg font-serif text-2xl italic leading-snug text-ivory/90 md:text-3xl">
             Кейтеринг, банкеты и кухня у старт-финишной прямой
           </p>
@@ -289,7 +362,7 @@ function Hero() {
             <span>{contacts.hours}</span>
           </div>
         </div>
-        <nav aria-label="Услуги" className="reveal mt-8 flex flex-wrap gap-x-5 gap-y-2">
+        <nav aria-label="Услуги" className="rise rise-3 mt-6 flex flex-wrap gap-x-5">
           {services.map((s, i) => (
             <a
               key={s.short}
@@ -298,9 +371,9 @@ function Hero() {
                 e.preventDefault()
                 requestOpenService(i)
               }}
-              className="link-line text-[11px] uppercase tracking-[0.22em] text-ivory/85 transition-colors hover:text-ivory md:text-[12px]"
+              className="py-2 text-[11px] uppercase tracking-[0.22em] text-ivory/85 transition-colors hover:text-ivory md:text-[12px]"
             >
-              {s.short}
+              <span className="link-line">{s.short}</span>
             </a>
           ))}
         </nav>
@@ -374,7 +447,8 @@ function About() {
   )
 }
 
-const formatPrice = (n: number) => n.toLocaleString('ru-RU')
+// 1600 → «1 600» (неразрывный пробел); одинаково на сервере и в браузере
+const formatPrice = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0')
 
 function MenuList({ group, reveal = true }: { group: MenuGroup; reveal?: boolean }) {
   const priceCell = 'w-[4.5rem] shrink-0 text-right md:w-20'
@@ -513,7 +587,7 @@ function Grill() {
 
 function VideoSlide({ item }: { item: Photo }) {
   // половина кадра на экране: соседние слайды в карусели не играют
-  const { ref, muted, toggleSound } = useAutoplayVideo(0.5)
+  const { ref, muted, toggleSound, togglePlay } = useAutoplayVideo(0.5)
   return (
     <div className="relative h-full w-full shrink-0 snap-center">
       <video
@@ -523,6 +597,7 @@ function VideoSlide({ item }: { item: Photo }) {
         loop
         playsInline
         preload="none"
+        onClick={togglePlay}
         aria-label={item.alt}
         className="graded-photo h-full w-full object-cover"
       >
@@ -602,7 +677,7 @@ function PhotoCarousel({ photos, label }: { photos: Photo[]; label: string }) {
               type="button"
               onClick={() => go(index + b.dir)}
               aria-label={b.label}
-              className="flex h-10 w-10 items-center justify-center border border-ivory/25 text-ivory/80 transition-colors duration-500 hover:border-ivory hover:bg-ivory hover:text-ink"
+              className="flex h-11 w-11 items-center justify-center border border-ivory/25 text-ivory/80 transition-colors duration-500 hover:border-ivory hover:bg-ivory hover:text-ink"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden>
                 <path d={b.path} />
@@ -627,6 +702,11 @@ function ServiceItem({
   onToggle: () => void
 }) {
   const id = `service-${index}`
+  // фото и видео услуги не скачиваем, пока её ни разу не открыли — первый экран грузится быстрее
+  const [mediaReady, setMediaReady] = useState(open)
+  useEffect(() => {
+    if (open) setMediaReady(true)
+  }, [open])
   return (
     <li id={`service-item-${index}`} className="reveal border-b border-line">
       <button
@@ -663,7 +743,7 @@ function ServiceItem({
           <div className="grid gap-12 pb-14 pt-6 md:grid-cols-12 md:gap-8 md:pb-16 md:pt-10">
             {service.photos && (
               <div className="mt-6 w-full max-w-[420px] md:col-span-4 md:col-start-2 md:mt-20 md:max-w-none">
-                {service.photos.length > 1 ? (
+                {!mediaReady ? null : service.photos.length > 1 ? (
                   <PhotoCarousel photos={service.photos} label={service.title} />
                 ) : (
                   <img
@@ -822,26 +902,35 @@ function Footer() {
     <footer className="mx-auto max-w-[1400px] px-5 pb-12 md:px-[6vw]">
       <div className="flex flex-col gap-10 border-t border-line pt-10 md:flex-row md:items-start md:justify-between">
         <div>
-          <img src="./images/logo-sm.webp" alt="Моторрест" width={492} height={121} loading="lazy" className="h-9 w-auto" />
+          <img
+            src="./images/logo-sm.webp"
+            srcSet="./images/logo-xs.webp 300w, ./images/logo-sm.webp 492w"
+            sizes="146px"
+            alt="Моторрест"
+            width={492}
+            height={121}
+            loading="lazy"
+            className="h-9 w-auto"
+          />
           <p className="mt-4 text-[12px] text-stone">Кафе и кейтеринг у трассы Сосновоборской школы картинга</p>
         </div>
-        <nav aria-label="Документы" className="flex flex-col gap-3 text-[12px] text-stone">
+        <nav aria-label="Документы" className="flex flex-col gap-1 text-[12px] text-stone">
           {legalDocs.map((d) => (
-            <a key={d.slug} href={`#/${d.slug}`} className="link-line self-start hover:text-ivory">
-              {d.title}
+            <a key={d.slug} href={`#/${d.slug}`} className="self-start py-1.5 hover:text-ivory">
+              <span className="link-line">{d.title}</span>
             </a>
           ))}
         </nav>
         <div className="flex gap-8 text-[12px] text-stone">
-          <a href={contacts.vkHref} target="_blank" rel="noreferrer" className="link-line hover:text-ivory">
-            ВКонтакте
+          <a href={contacts.vkHref} target="_blank" rel="noreferrer" className="py-1.5 hover:text-ivory">
+            <span className="link-line">ВКонтакте</span>
           </a>
-          <a href="#top" className="link-line hover:text-ivory">
-            Наверх
+          <a href="#top" className="py-1.5 hover:text-ivory">
+            <span className="link-line">Наверх</span>
           </a>
         </div>
       </div>
-      <p className="mt-10 text-[11px] leading-relaxed text-stone/70">
+      <p className="mt-10 text-[11px] leading-relaxed text-stone">
         © 2026 Моторрест · {operator.name} · ИНН {operator.inn} · ОГРН {operator.ogrn}
       </p>
     </footer>
@@ -942,7 +1031,7 @@ function CookieNotice() {
     <div
       role="region"
       aria-label="Уведомление о cookie и персональных данных"
-      className={`fixed inset-x-3 bottom-3 z-[60] flex flex-col items-start gap-4 border border-line bg-ink2/95 p-5 backdrop-blur transition-[opacity,transform] duration-700 md:inset-x-auto md:bottom-6 md:left-6 md:max-w-[460px] ${
+      className={`fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[60] flex flex-col items-start gap-4 border border-line bg-ink2 p-5 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)] transition-[opacity,transform] duration-700 md:inset-x-auto md:bottom-6 md:left-6 md:max-w-[460px] ${
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'
       }`}
     >
@@ -964,7 +1053,7 @@ function CookieNotice() {
       <button
         type="button"
         onClick={accept}
-        className="shrink-0 border border-ivory/40 px-4 py-2.5 text-[11px] uppercase tracking-[0.2em] transition-colors duration-500 hover:border-ivory hover:bg-ivory hover:text-ink md:px-6"
+        className="shrink-0 border border-ivory/40 px-5 py-3 text-[11px] uppercase tracking-[0.2em] transition-colors duration-500 hover:border-ivory hover:bg-ivory hover:text-ink md:px-6"
       >
         Подтвердить
       </button>
@@ -972,7 +1061,8 @@ function CookieNotice() {
   )
 }
 
-const docFromHash = () => legalDocs.find((d) => window.location.hash === `#/${d.slug}`) ?? null
+export const docFromHash = () =>
+  typeof window === 'undefined' ? null : (legalDocs.find((d) => window.location.hash === `#/${d.slug}`) ?? null)
 
 export default function App() {
   const [doc, setDoc] = useState<LegalDoc | null>(docFromHash)

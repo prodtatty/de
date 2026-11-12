@@ -1,5 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { StrictMode } from 'react'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import '@fontsource/cormorant-garamond/cyrillic-400.css'
 import '@fontsource/cormorant-garamond/latin-400.css'
 import '@fontsource/cormorant-garamond/cyrillic-500.css'
@@ -12,11 +12,17 @@ import '@fontsource/manrope/cyrillic-400.css'
 import '@fontsource/manrope/latin-400.css'
 import '@fontsource/manrope/cyrillic-500.css'
 import '@fontsource/manrope/latin-500.css'
-import App from './App'
+import App, { docFromHash } from './App'
 import './index.css'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+const root = document.getElementById('root')!
+const app = (
+  <StrictMode>
     <App />
-  </React.StrictMode>,
+  </StrictMode>
 )
+
+// Главная уже отрисована при сборке — «оживляем» готовую разметку.
+// Документы по прямой ссылке (#/privacy и т. п.) и режим разработки рисуем с нуля.
+if (root.hasChildNodes() && !docFromHash()) hydrateRoot(root, app)
+else createRoot(root).render(app)

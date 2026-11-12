@@ -1,0 +1,12 @@
+{
+  "name": "Моторрест — кейтеринг, банкеты и кафе",
+  "short_name": "Моторрест",
+  "start_url": "./",
+  "display": "browser",
+  "background_color": "#0E0D0B",
+  "theme_color": "#0E0D0B",
+  "icons": [
+    { "src": "./apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
