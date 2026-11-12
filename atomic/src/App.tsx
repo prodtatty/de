@@ -561,7 +561,7 @@ function ServiceItem({
                 width={800}
                 height={1000}
                 loading="lazy"
-                className="graded-photo aspect-[4/5] w-full max-w-[420px] object-cover md:col-span-4 md:col-start-2 md:max-w-none"
+                className="graded-photo mt-6 aspect-[4/5] w-full max-w-[420px] object-cover md:col-span-4 md:col-start-2 md:mt-20 md:max-w-none"
               />
             )}
             <div
