@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { contacts, grill, menu, services, type MenuGroup, type Photo, type Service } from './data'
+import { chef, contacts, grill, menu, services, type MenuGroup, type Photo, type Service } from './data'
 import { EDITION, legalDocs, operator, type Block, type LegalDoc } from './legal'
 
 function useReveal(page: string) {
@@ -430,6 +430,8 @@ function About() {
         </div>
       </div>
 
+      <Chef />
+
       <div className="mt-32 grid border-t border-line md:mt-48 md:grid-cols-3">
         {[
           ['I', 'Готовим на месте', 'От борща до дубайского шоколада — всё делает наша команда, ничего не привозится замороженным.'],
@@ -444,6 +446,107 @@ function About() {
         ))}
       </div>
     </section>
+  )
+}
+
+function ChefVideo() {
+  const { ref, muted, started, toggleSound, togglePlay } = useAutoplayVideo(0.5)
+  return (
+    <div className="relative aspect-video overflow-hidden border border-ivory/10 bg-ink">
+      {/* обложка «ленивой» картинкой; само видео скачивается, только когда блок на экране.
+          Когда видео проявилось, обложку прячем: иначе при дробной ширине блока она выглядывает полоской в 1 px */}
+      <img
+        src="./videos/chef-show-poster.webp"
+        alt=""
+        width={960}
+        height={540}
+        loading="lazy"
+        className={`graded-video absolute inset-0 h-full w-full object-cover ${started ? 'opacity-0 delay-700' : ''}`}
+      />
+      <video
+        ref={ref}
+        muted
+        loop
+        playsInline
+        preload="none"
+        onClick={togglePlay}
+        aria-label="Фрагмент шоу «Битва шефов» на телеканале «Пятница» с участием Ксении Зайцевой"
+        className={`graded-video absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+          started ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <source src="./videos/chef-show.mp4" type="video/mp4" />
+        <source src="./videos/chef-show.webm" type="video/webm" />
+      </video>
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink/80 to-transparent" />
+      <SoundButton muted={muted} onClick={toggleSound} className="absolute bottom-4 left-4" />
+    </div>
+  )
+}
+
+function Chef() {
+  return (
+    <div className="mt-32 border-t border-line pt-20 md:mt-48 md:pt-28">
+      <div className="grid gap-14 md:grid-cols-12 md:gap-8">
+        <figure className="reveal md:col-span-5">
+          <div className="relative aspect-[3/4] overflow-hidden">
+            <img
+              src="./images/chef/chef.webp"
+              srcSet="./images/chef/chef-600.webp 600w, ./images/chef/chef.webp 1000w"
+              sizes="(min-width: 768px) 38vw, 100vw"
+              width={1000}
+              height={1333}
+              alt="Шеф-повар Ксения Зайцева с медалью и кубком за первое место в конкурсе шеф-поваров"
+              loading="lazy"
+              className="graded-portrait absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
+          <figcaption className="eyebrow mt-4 leading-[1.9]">{chef.award}</figcaption>
+        </figure>
+
+        <div className="md:col-span-6 md:col-start-7 md:pt-10">
+          <div className="reveal">
+            <p className="eyebrow">
+              <span className="text-bronze">Шеф-повар</span>
+            </p>
+            <h3 className="mt-6 font-serif text-[52px] font-normal italic leading-[1] md:text-[80px]">{chef.name}</h3>
+            <div className="mt-10 max-w-md space-y-6 text-[15px] leading-[1.8] text-ivory/75">
+              {chef.intro.map((p) => (
+                <p key={p}>{p}</p>
+              ))}
+            </div>
+          </div>
+
+          <blockquote className="reveal mt-12 max-w-lg border-l border-bronze/60 pl-6">
+            <p className="font-serif text-[24px] italic leading-[1.35] text-ivory/90 md:text-[28px]">«{chef.quote}»</p>
+            <footer className="eyebrow mt-4">Ксения</footer>
+          </blockquote>
+
+          <div className="reveal mt-14">
+            <p className="eyebrow">Почему Ксении доверяют</p>
+            <ul className="mt-6 border-t border-line">
+              {chef.points.map(([t, d]) => (
+                <li key={t} className="grid gap-1 border-b border-line py-5 md:grid-cols-[12rem_1fr] md:gap-6">
+                  <span className="font-serif text-[22px] leading-snug">{t}</span>
+                  <span className="text-[14px] leading-[1.75] text-stone md:pt-1">{d}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <figure className="reveal mt-20 grid gap-6 md:mt-28 md:grid-cols-12 md:items-end md:gap-8">
+        <div className="md:order-2 md:col-span-8 md:col-start-5">
+          <ChefVideo />
+        </div>
+        <figcaption className="md:order-1 md:col-span-3 md:row-start-1">
+          <p className="eyebrow">Телеканал «Пятница» · 0:45</p>
+          <p className="mt-4 font-serif text-[30px] italic leading-tight md:text-[36px]">«Битва шефов»</p>
+          <p className="mt-3 max-w-xs text-[14px] leading-[1.75] text-stone">Фрагмент выпуска с участием Ксении.</p>
+        </figcaption>
+      </figure>
+    </div>
   )
 }
 

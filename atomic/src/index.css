@@ -112,6 +112,10 @@ html {
 .graded-photo {
   filter: saturate(0.85) contrast(1.03) brightness(0.95);
 }
+/* портрет: приглушаем яркий фон, лицо остаётся живым */
+.graded-portrait {
+  filter: saturate(0.7) contrast(1.04) brightness(0.86) sepia(0.12);
+}
 .graded-video {
   filter: saturate(0.78) contrast(1.04) brightness(0.92) sepia(0.08);
 }
